@@ -82,7 +82,6 @@ using static Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper;
 
             return new AuthEndPointAttribute[1] { watchep };
 
-            //return auths.ToArray();
             //Non Access
             GoNonAccess: return new AuthEndPointAttribute[0];
             //Non watching range
