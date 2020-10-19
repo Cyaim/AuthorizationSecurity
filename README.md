@@ -59,7 +59,7 @@ using static Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper;
                 personId = "sys_guest";
             }
 
-            URLStruct urlStruct = GetUrlStruct(ROUTE, httpContext.Request.Path); ;
+            URLStruct urlStruct = GetUrlStruct(ROUTE, httpContext.Request.Path);
 
             // Adopt request URL search watching endpoint
             var watchep = authOptions.WatchAuthEndPoint.FirstOrDefault(x =>
