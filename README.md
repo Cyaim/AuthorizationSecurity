@@ -4,7 +4,7 @@
 
 ## Quick Start
 
-In "Startup.cs" ->"ConfigureServices" Method,the last add code. 
+1,In "Startup.cs" -> "ConfigureServices" Method,the method last add code. 
 
 ```C#
 services.ConfigureAuth(x =>
@@ -14,3 +14,15 @@ services.ConfigureAuth(x =>
                 x.PreAccessEndPointKey = "Sys";
             });
 ```
+
+2,Go to controller
+In need of authorization Controller or Action mark:
+```C#
+[AuthEndPoint()]
+```
+In not authorization Action mark:
+```C#
+[AuthEndPoint(allowGuest: true)]
+```
+
+## Persistence and cache
