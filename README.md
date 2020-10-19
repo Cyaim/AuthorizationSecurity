@@ -56,6 +56,7 @@ using static Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper;
             string personId = GetUserIdByRedis(authKey);
             if (personId == null)
             {
+                // to do request is not login
                 personId = "sys_guest";
             }
 
