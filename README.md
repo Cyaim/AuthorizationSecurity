@@ -4,7 +4,8 @@
 
 ## Quick Start
 
-In "Startup.cs" ->"ConfigureServices" Method,the last add code.
+In "Startup.cs" ->"ConfigureServices" Method,the last add code. 
+
 `
 services.ConfigureAuth(x =>
             {
