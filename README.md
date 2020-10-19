@@ -25,4 +25,6 @@ In not authorization Action mark:
 [AuthEndPoint(allowGuest: true)]
 ```
 
+3,Use Attribute Complate,Run you project~
+
 ## Persistence and cache
