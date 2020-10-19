@@ -1,3 +1,3 @@
 # AuthorizationSecurity
 
-## Base ASP.NET Core MVC Endpoint authorization framework
+> Base ASP.NET Core MVC Endpoint authorization framework
