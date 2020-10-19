@@ -10,7 +10,6 @@
 services.ConfigureAuth(x =>
             {
                 x.SourceLocation = ParameterLocation.Header;
-                x.ExtractDatabaseAuthEndPoints = new AuthOptions.ExtractAuthEndPointsHandler(Auth.GetAuthEndPointByUser);
                 x.PreAccessEndPointKey = "Sys";
             });
 ```
