@@ -3,3 +3,9 @@
 ################################################################################
 
 /Cyaim.Authentication/obj
+/.vs
+/Cyaim.Authentication/.vs/Cyaim.Authentication/DesignTimeBuild
+/Cyaim.Authentication/bin/Debug
+/Cyaim.Authentication.MigrateCLI/.vs/Cyaim.Authentication.MigrateCLI/v16
+/Cyaim.Authentication.MigrateCLI/bin/Debug/netcoreapp3.1
+/Cyaim.Authentication.MigrateCLI/obj
