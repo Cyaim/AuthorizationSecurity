@@ -28,25 +28,23 @@ In not authorization Action mark:
 
 ## Persistence and cache
 1,You need a class verify authorization  
-Here operation PostgreSQL and redis, You can replace it with something you like
+Here operation PostgreSQL and redis, You can replace it with something you like.
 ```C#
-
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using static Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper;
 using Newtonsoft.Json;
-using System;
+
+using static Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper;
 
  public class Auth
     {
 
         static Auth()
         {
-            //var appsetting = JsonConvert.DeserializeObject<AppSettingsModel>(File.ReadAllText(Directory.GetCurrentDirectory() + @"\appsettings.json"));
             _npgsqlDapperHelper = NpgsqlDapperHelper.Helper("Your databse connection string");
-
-            _redisHelper = new RedisHelper("127.0.0.1:6379", "Auth", 0);
+            _redisHelper = new RedisHelper("Your redis connection string", "Auth", 0);
         }
 
         private readonly static NpgsqlDapperHelper _npgsqlDapperHelper;
@@ -102,4 +100,16 @@ using System;
             return personId;
         }
     }
+```
+
+2,Add Auth Handler
+In "Startup.cs" -> "ConfigureServices" Method,the method last add code. 
+
+```C#
+services.ConfigureAuth(x =>
+            {
+                x.SourceLocation = ParameterLocation.Header;
+                x.ExtractDatabaseAuthEndPoints = new AuthOptions.ExtractAuthEndPointsHandler(Auth.GetAuthEndPointByUser);
+                x.PreAccessEndPointKey = "Sys";
+            });
 ```
