@@ -102,7 +102,7 @@ using static Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper;
     }
 ```
 
-2,Add Auth Handler
+2,Add Auth Handler  
 In "Startup.cs" -> "ConfigureServices" Method,the method last add code. 
 
 ```C#
