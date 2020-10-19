@@ -15,7 +15,7 @@ services.ConfigureAuth(x =>
             });
 ```
 
-2,Go to controller
+2,Go to controller  
 In need of authorization Controller or Action mark:
 ```C#
 [AuthEndPoint()]
