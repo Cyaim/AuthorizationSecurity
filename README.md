@@ -4,7 +4,13 @@
 
 ## Quick Start
 
-### 1,Add auth middleware & configure auth service  
+### 1,Install Nuget package  
+Nuget run command.
+```ps
+Install-Package Cyaim.Authentication -Version 1.0.0
+```
+
+### 2,Add auth middleware & configure auth service  
 In "Startup.cs" -> "ConfigureServices" Method,the method last add code. 
 
 ```C#
@@ -21,7 +27,7 @@ app.UseAuth();
 ```
 
 
-### 2,Go to controller  
+### 3,Go to controller  
 In need of authorization Controller or Action mark:
 ```C#
 [AuthEndPoint()]
@@ -31,7 +37,7 @@ In not authorization Action mark:
 [AuthEndPoint(allowGuest: true)]
 ```
 
-### 3,Use Attribute Complate,Run you project~
+### 4,Use Attribute Complate,Run you project~
 
 ## Persistence and cache
 ### 1,You need a class verify authorization  
