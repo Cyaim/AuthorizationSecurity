@@ -86,7 +86,7 @@ using static Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper;
             {
                 goto GoNonAccess;
             }
-            //----------End code----------
+            //----------End your code----------
             
             return new AuthEndPointAttribute[1] { watchep };
 
