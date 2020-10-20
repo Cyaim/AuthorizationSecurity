@@ -2,6 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/Cyaim/AuthorizationSecurity</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Cyaim/AuthorizationSecurity</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Authors>Psyche</Authors>
+    <Company>Cyaim Studio</Company>
+    <Description>AuthorizationSecurity is based on endpoint authorization framework.You only write database code and mark endpoint can complete the authorization.</Description>
+    <PackageLicenseExpression></PackageLicenseExpression>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>E:\WorkSpaces\Cyaim.Authentication\AuthorizationSecurity\Cyaim.Authentication\Cyaim.Authentication.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

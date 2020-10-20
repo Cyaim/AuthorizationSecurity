@@ -9,3 +9,6 @@
 /Cyaim.Authentication.MigrateCLI/.vs/Cyaim.Authentication.MigrateCLI/v16
 /Cyaim.Authentication.MigrateCLI/bin/Debug/netcoreapp3.1
 /Cyaim.Authentication.MigrateCLI/obj
+/Cyaim.Authentication/Properties/PublishProfiles
+*.user
+/Cyaim.Authentication/bin/Release
