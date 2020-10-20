@@ -4,7 +4,7 @@
 
 ## Quick Start
 
-###1,Add auth middleware & configure auth service.  
+### 1,Add auth middleware & configure auth service.  
 In "Startup.cs" -> "ConfigureServices" Method,the method last add code. 
 
 ```C#
@@ -20,7 +20,7 @@ app.UseAuth();
 ```
 
 
-###2,Go to controller  
+### 2,Go to controller  
 In need of authorization Controller or Action mark:
 ```C#
 [AuthEndPoint()]
@@ -30,10 +30,10 @@ In not authorization Action mark:
 [AuthEndPoint(allowGuest: true)]
 ```
 
-###3,Use Attribute Complate,Run you project~
+### 3,Use Attribute Complate,Run you project~
 
 ## Persistence and cache
-###1,You need a class verify authorization  
+### 1,You need a class verify authorization  
 Here operation PostgreSQL and redis, You can replace it with something you like.
 ```C#
 using System;
@@ -108,7 +108,7 @@ using static Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper;
     }
 ```
 
-###2,Add Auth Handler  
+### 2,Add Auth Handler  
 In "Startup.cs" -> "ConfigureServices" Method,the method last replace code. 
 
 ```C#
