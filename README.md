@@ -16,8 +16,8 @@ services.ConfigureAuth(x =>
 ```
 In "Configure" Method add middleware.  
 ```diff
-+ AuthMiddleware must add above UseEndpoints.
-- AuthMiddleware must  .
+AuthMiddleware must add above UseEndpoints.
+ 
 ```
 ```C#
 app.UseAuth();
