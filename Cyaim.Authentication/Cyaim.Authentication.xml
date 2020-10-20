@@ -1,0 +1,384 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cyaim.Authentication</name>
+    </assembly>
+    <members>
+        <member name="T:Cyaim.Authentication.Infrastructure.Attributes.AuthEndPointAttribute">
+            <summary>
+            授权节点特性
+            </summary>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.Attributes.AuthEndPointAttribute.#ctor(System.String,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.Attributes.AuthEndPointAttribute.#ctor(System.Boolean,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.Attributes.AuthEndPointAttribute.#ctor">
+            <summary>
+            标记权限节点，由系统生成权限节点名称（ControllerName.ActionName）
+            </summary>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.Attributes.AuthEndPointAttribute.#ctor(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            标记权限节点
+            </summary>
+            <param name="authEndPoint">权限节点名称</param>
+            <param name="isAllow">是否允许访问,true允许/false拒绝</param>
+            <param name="allowGuest">是否允许游客访问,true允许/false拒绝</param>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Attributes.AuthEndPointAttribute.AuthEndPoint">
+            <summary>
+            权限节点
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Attributes.AuthEndPointAttribute.IsAllow">
+            <summary>
+            是否允许访问
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Attributes.AuthEndPointAttribute.AllowGuest">
+            <summary>
+            是否允许游客访问
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Attributes.AuthEndPointAttribute.ControllerName">
+            <summary>
+            节点Controller
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Attributes.AuthEndPointAttribute.ActionName">
+            <summary>
+            节点Action
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Attributes.AuthEndPointAttribute.ActionCanEmpty">
+            <summary>
+            Action名称是否可空，标记方法不填写访问路径时为true
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Attributes.AuthEndPointAttribute.Routes">
+            <summary>
+            请求方法
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Attributes.IAuthEndPointAttribute.AuthEndPoint">
+            <summary>
+            权限节点
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Attributes.IAuthEndPointAttribute.IsAllow">
+            <summary>
+            是否允许访问
+            </summary>
+        </member>
+        <member name="T:Cyaim.Authentication.Infrastructure.AuthenticationService">
+            <summary>
+            授权服务
+            </summary>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.AuthenticationService.CheckAuthorization(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            凭据鉴权
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.AuthenticationService.CheckAuthCache(Microsoft.AspNetCore.Http.HttpContext,System.String)">
+            <summary>
+            从缓存获取authKey的权限节点
+            </summary>
+            <param name="context"></param>
+            <param name="authKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.AuthenticationService.CheckAuthDatabase(Microsoft.AspNetCore.Http.HttpContext,System.String)">
+            <summary>
+            从数据库获取authKey的权限节点
+            </summary>
+            <param name="context"></param>
+            <param name="authKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.AuthenticationService.CheckAuthDefault(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            默认鉴权
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.AuthenticationService.CheckAuth(Microsoft.AspNetCore.Http.HttpContext,Cyaim.Authentication.Infrastructure.Attributes.AuthEndPointAttribute[])">
+            <summary>
+            通用鉴权方法
+            </summary>
+            <param name="context"></param>
+            <param name="authEndPoints">授权节点列表</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.AuthenticationService.GetAuthorizationValue(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            获取授权Key
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.AuthenticationService.RegisterAccessCode(System.String,System.Boolean)">
+            <summary>
+            缓存注册权限节点
+            </summary>
+            <param name="accessCode"></param>
+            <param name="isAccept"></param>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.AuthenticationService.GetClassAccessParm``1">
+            <summary>
+            获取程序集Controller中的权限节点
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.AuthenticationService.GetClassAccessParm(System.Type)">
+            <summary>
+            获取程序集Controller中的权限节点
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.AuthOptions.AccessSources">
+            <summary>
+            权限检测序列，授权中心、数据库、缓存、特性
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.AuthOptions.CheckAsyncSource">
+            <summary>
+            是否异步检测数据序列
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.AuthOptions.SourceKey">
+            <summary>
+            Http访问凭据Key
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.AuthOptions.PreAccessEndPointKey">
+            <summary>
+            访问权限代码前缀
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.AuthOptions.SourceLocation">
+            <summary>
+            Http凭据位置
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.AuthOptions.WatchAssemblyPath">
+            <summary>
+            监听程序集路径
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.AuthOptions.WatchAuthEndPoint">
+            <summary>
+            监听的授权节点
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.AuthOptions.NonAccessParm">
+            <summary>
+            未授权响应配置
+            </summary>
+        </member>
+        <member name="T:Cyaim.Authentication.Infrastructure.AuthOptions.ExtractAuthEndPointsHandler">
+            <summary>
+            提取授权节点
+            </summary>
+            <param name="authKey">请求凭据</param>
+            <param name="httpContext">HTTP上下文</param>
+            <returns></returns>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.AuthOptions.ExtractCacheAuthEndPoints">
+            <summary>
+            从缓存提取
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.AuthOptions.ExtractDatabaseAuthEndPoints">
+            <summary>
+            从数据库提取
+            </summary>
+        </member>
+        <member name="T:Cyaim.Authentication.Infrastructure.AccessSourceEnum">
+            <summary>
+            权限节点访问处理方法
+            </summary>
+        </member>
+        <member name="F:Cyaim.Authentication.Infrastructure.AccessSourceEnum.AuthCenter">
+            <summary>
+            授权中心
+            </summary>
+        </member>
+        <member name="F:Cyaim.Authentication.Infrastructure.AccessSourceEnum.Cache">
+            <summary>
+            缓存
+            </summary>
+        </member>
+        <member name="F:Cyaim.Authentication.Infrastructure.AccessSourceEnum.Database">
+            <summary>
+            数据库
+            </summary>
+        </member>
+        <member name="F:Cyaim.Authentication.Infrastructure.AccessSourceEnum.Default">
+            <summary>
+            默认权限，程序集标记特性
+            </summary>
+        </member>
+        <member name="T:Cyaim.Authentication.Infrastructure.NonAccessParm">
+            <summary>
+            未授权响应参数
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.NonAccessParm.NonAccessResponseStatus">
+            <summary>
+            无权限HTTP响应状态码
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.NonAccessParm.NonAccessResponseContentType">
+            <summary>
+            无权限HTTP响应类型
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.NonAccessParm.NonAccessResponseContent">
+            <summary>
+            无权限响应内容
+            </summary>
+        </member>
+        <member name="T:Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper.URLStruct">
+            <summary>
+            URL结构
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper.URLStruct.Scheme">
+            <summary>
+            协议
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper.URLStruct.Host">
+            <summary>
+            主机
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper.URLStruct.Path">
+            <summary>
+            请求路径
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper.URLStruct.Controller">
+            <summary>
+            控制器名称
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper.URLStruct.Action">
+            <summary>
+            方法
+            </summary>
+        </member>
+        <member name="P:Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper.URLStruct.QueryString">
+            <summary>
+            请求参数
+            </summary>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper.GetUrlStruct(System.String,System.String)">
+            <summary>
+            获取URL结构
+            </summary>
+            <param name="template">路由模版，"/api/v1/{controller}/{action}"</param>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Cyaim.Authentication.Infrastructure.IAuthMetadata">
+            <summary>
+            Auth元数据标记
+            </summary>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.IAuthService.RegisterAccessCode(System.String,System.Boolean)">
+            <summary>
+            注册节点
+            </summary>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.IAuthService.GetClassAccessParm``1">
+            <summary>
+            从类中获取授权节点信息
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.IAuthService.GetClassAccessParm(System.Type)">
+            <summary>
+            从类中获取授权节点信息
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.IAuthService.CheckAuthDefault(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            校验默认授权，特性
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.IAuthService.GetAuthorizationValue(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            获取授权凭据
+            </summary>
+            <param name="http">http上下文</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.IAuthService.CheckAuthorization(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            检验凭据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.IAuthService.GetAuthHeader(Microsoft.AspNetCore.Http.HttpContext,System.String)">
+            <summary>
+            从Header搜索凭据
+            </summary>
+            <param name="context"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.IAuthService.GetAuthCookie(Microsoft.AspNetCore.Http.HttpContext,System.String)">
+            <summary>
+            从Cookie搜索凭据
+            </summary>
+            <param name="context"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cyaim.Authentication.Infrastructure.IAuthService.GetAuthQuery(Microsoft.AspNetCore.Http.HttpContext,System.String)">
+            <summary>
+            从Query搜索凭据
+            </summary>
+            <param name="context"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Cyaim.Authentication.Middlewares.AuthMiddleware">
+            <summary>
+            授权服务仅在本程序内运行
+            </summary>
+        </member>
+        <member name="F:Cyaim.Authentication.Middlewares.AuthMiddleware._authOptions">
+            <summary>
+            授权配置，只加载在Startup中配置的数据
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.AuthServiceCollectionExtensions">
+            <summary>
+            授权服务配置扩展
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.AuthServiceCollectionExtensions.ConfigureAuth(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Cyaim.Authentication.Infrastructure.AuthOptions})">
+            <summary>
+            配置授权服务运行状态
+            </summary>
+            <param name="services"></param>
+            <param name="setupAction"></param>
+        </member>
+    </members>
+</doc>
