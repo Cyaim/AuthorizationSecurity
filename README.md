@@ -4,7 +4,8 @@
 
 ## Quick Start
 
-1,In "Startup.cs" -> "ConfigureServices" Method,the method last add code. 
+1,Add auth middleware & configure auth service.
+In "Startup.cs" -> "ConfigureServices" Method,the method last add code. 
 
 ```C#
 services.ConfigureAuth(x =>
@@ -13,6 +14,11 @@ services.ConfigureAuth(x =>
                 x.PreAccessEndPointKey = "Sys";
             });
 ```
+In "Configure" Method add middleware.AuthMiddleware must add above UseEndpoints.
+```C#
+app.UseAuth();
+```
+
 
 2,Go to controller  
 In need of authorization Controller or Action mark:
