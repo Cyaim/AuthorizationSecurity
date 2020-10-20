@@ -14,7 +14,8 @@ services.ConfigureAuth(x =>
                 x.PreAccessEndPointKey = "Sys";
             });
 ```
-In "Configure" Method add middleware.AuthMiddleware must add above UseEndpoints.
+In "Configure" Method add middleware.
+$\color{#4285f4}{AuthMiddleware must add above UseEndpoints.}
 ```C#
 app.UseAuth();
 ```
