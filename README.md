@@ -81,11 +81,13 @@ using static Cyaim.Authentication.Infrastructure.Helpers.URLStructHelper;
                 goto NonAccessWatch;
             }
 
-            if(user permission==false)
+            //----------Begin database query user authorization code----------
+            if(user permission == false)
             {
                 goto GoNonAccess;
             }
-
+            //----------End code----------
+            
             return new AuthEndPointAttribute[1] { watchep };
 
             //Non Access
