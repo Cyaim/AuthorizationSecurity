@@ -4,7 +4,7 @@
 
 ## Quick Start
 
-### 1,Add auth middleware & configure auth service.  
+### 1,Add auth middleware & configure auth service  
 In "Startup.cs" -> "ConfigureServices" Method,the method last add code. 
 
 ```C#
