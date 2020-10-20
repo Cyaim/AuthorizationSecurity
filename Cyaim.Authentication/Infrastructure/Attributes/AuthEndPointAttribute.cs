@@ -18,7 +18,7 @@ namespace Cyaim.Authentication.Infrastructure.Attributes
         }
 
         /// <inheritdoc/>
-        public AuthEndPointAttribute(bool isAllow, bool allowGuest = false) : this(authEndPoint: null, isAllow: isAllow, allowGuest: allowGuest)
+        public AuthEndPointAttribute(bool isAllow = true, bool allowGuest = false) : this(authEndPoint: null, isAllow: isAllow, allowGuest: allowGuest)
         {
 
         }
