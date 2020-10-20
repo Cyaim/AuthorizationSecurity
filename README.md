@@ -5,7 +5,10 @@
 ## Quick Start
 
 ### 1,Install Nuget package  
-Nuget run command.
+Project Nuget address:  
+https://www.nuget.org/packages/Cyaim.Authentication/
+
+Nuget run command.  
 ```ps
 Install-Package Cyaim.Authentication -Version 1.0.0
 ```
