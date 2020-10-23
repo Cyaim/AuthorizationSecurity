@@ -80,11 +80,10 @@ namespace Cyaim.Authentication.Middlewares
             if (noAccessParm == null)
             {
                 context.Response.StatusCode = 403;
-                //context.Response.Body = new MemoryStream();
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync($@"{{
                     ""status"":403,
-                    ""msg"":""无权限""
+                    ""msg"":""No permission""
                 }}");
             }
             else
@@ -94,10 +93,6 @@ namespace Cyaim.Authentication.Middlewares
                 await context.Response.WriteAsync(noAccessParm.NonAccessResponseContent);
             }
 
-
-            //return Task.CompletedTask;
-
-            //await _next(context);
         }
     }
 }

@@ -96,7 +96,7 @@ namespace Microsoft.Extensions.DependencyInjection
             var types = assembly.GetTypes().Where(x => !x.IsNestedPrivate && x.FullName.StartsWith(assemblyName)).ToList();
             foreach (var item in types)
             {
-                var accessParm = authService.GetClassAccessParm(item);
+                var accessParm = AuthServiceCollectionExtensions.GetClassAccessParm(item);
                 authEndPointParms = authEndPointParms.Union(accessParm);
                 foreach (AuthEndPointAttribute parmItem in accessParm)
                 {
@@ -131,5 +131,46 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
 
+        /// <summary>
+        /// 获取程序集Controller中的权限节点
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static AuthEndPointAttribute[] GetClassAccessParm<T>()
+        {
+            var type = typeof(T);
+            return GetClassAccessParm(type);
+        }
+
+        /// <summary>
+        /// 获取程序集Controller中的权限节点
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static AuthEndPointAttribute[] GetClassAccessParm(Type type)
+        {
+            var classLevel = type.GetCustomAttributes<AuthEndPointAttribute>()
+                  .Select(x =>
+                  {
+                      x.ActionName = "*";
+                      x.ControllerName = type.Name;
+                      return x;
+                  });
+            var methodLevel = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                .Select(x =>
+                {
+                    return x.GetCustomAttributes<AuthEndPointAttribute>().Select(a =>
+                    {
+                        a.ActionName = x.Name;
+                        a.ControllerName = x.ReflectedType.Name;
+                        a.Routes = x.GetCustomAttributes<AspNetCore.Mvc.Routing.HttpMethodAttribute>().ToArray();
+                        a.ActionCanEmpty = a.Routes.Any(x => string.IsNullOrEmpty(x.Template));
+                        return a;
+                    }).ToArray();
+                }).SelectMany((x, y) => x);
+
+
+            return classLevel.Union(methodLevel).ToArray();
+        }
     }
 }

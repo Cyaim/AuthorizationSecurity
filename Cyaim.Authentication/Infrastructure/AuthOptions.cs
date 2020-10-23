@@ -118,4 +118,34 @@ namespace Cyaim.Authentication.Infrastructure
         /// </summary>
         public string NonAccessResponseContent { get; set; }
     }
+
+
+
+    public class HttpMethod
+    {
+        public static readonly Dictionary<string, int> HttpMethodMaps = new Dictionary<string, int>()
+        {
+            { "GET",(int)HttpMethodEnum.GET},
+            { "POST",(int)HttpMethodEnum.POST},
+            { "DELETE",(int)HttpMethodEnum.DELETE},
+            { "PUT",(int)HttpMethodEnum.PUT},
+            { "PATCH",(int)HttpMethodEnum.PATCH},
+            { "HEAD",(int)HttpMethodEnum.HEAD},
+            { "CONNECT",(int)HttpMethodEnum.CONNECT},
+            { "TRACE",(int)HttpMethodEnum.TRACE},
+            { "OPTIONS",(int)HttpMethodEnum.OPTIONS},
+        };
+        public enum HttpMethodEnum
+        {
+            GET = 2,
+            POST = 4,
+            DELETE = 8,
+            PUT = 16,
+            PATCH = 32,
+            HEAD = 64,
+            CONNECT = 128,
+            TRACE = 256,
+            OPTIONS = 512,
+        }
+    }
 }

@@ -180,17 +180,6 @@ namespace Cyaim.Authentication.Infrastructure
                 return false;
             }
 
-            //authEndPoints = authEndPoints.Union(new AuthEndPointParm[1] {
-            //    new AuthEndPointParm(){
-            //    ActionName="23333",
-            //    ControllerName="23333",
-            //    AuthEndPointAttributes=new AuthEndPointAttribute[]{ new AuthEndPointAttribute() {
-            //    AuthEndPoint="23333.23333",
-            //    IsAllow=true
-            //    } },
-            //    Routes=new HttpMethodAttribute[]{ new HttpGetAttribute() }
-            //    }
-            //}).ToArray();
             #region MyRegion
             //string controllerName = context.GetRouteValue("controller")?.ToString().ToLower();
             //string actionName = context.GetRouteValue("action")?.ToString().ToLower();
@@ -322,6 +311,12 @@ namespace Cyaim.Authentication.Infrastructure
 
         #region 获取Token
 
+        /// <summary>
+        /// Get credential by querystring
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public virtual string GetAuthQuery(HttpContext context, string key)
         {
             context.Request.Query.TryGetValue(key, out StringValues vs);
@@ -330,6 +325,12 @@ namespace Cyaim.Authentication.Infrastructure
             return token;
         }
 
+        /// <summary>
+        /// Get credential by request header
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public virtual string GetAuthHeader(HttpContext context, string key)
         {
             context.Request.Headers.TryGetValue(key, out StringValues vs);
@@ -338,6 +339,12 @@ namespace Cyaim.Authentication.Infrastructure
             return token;
         }
 
+        /// <summary>
+        /// Get credential by cookie
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public virtual string GetAuthCookie(HttpContext context, string key)
         {
             context.Request.Cookies.TryGetValue(key, out string token);
@@ -392,63 +399,6 @@ namespace Cyaim.Authentication.Infrastructure
             _memoryCache.Set("authEndPoints", accs, cacheEntryOptions);
         }
 
-        /// <summary>
-        /// 获取程序集Controller中的权限节点
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public AuthEndPointAttribute[] GetClassAccessParm<T>()
-        {
-            var type = typeof(T);
-            return GetClassAccessParm(type);
-        }
-
-        /// <summary>
-        /// 获取程序集Controller中的权限节点
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public AuthEndPointAttribute[] GetClassAccessParm(Type type)
-        {
-            //var classLevel = type.GetCustomAttributes<AuthEndPointAttribute>()
-            //       .Select(x => new AuthEndPointParm
-            //       {
-            //           AuthEndPointAttributes = new AuthEndPointAttribute[] { x },
-            //           ActionName = "*",
-            //           ControllerName = type.Name
-            //       });
-            //var methodLevel = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-            //    .Select(x => new AuthEndPointParm
-            //    {
-            //        AuthEndPointAttributes = x.GetCustomAttributes<AuthEndPointAttribute>().ToArray(),
-            //        ActionName = x.Name,
-            //        ControllerName = x.ReflectedType.Name,
-            //        Routes = x.GetCustomAttributes<HttpMethodAttribute>().ToArray()
-            //    });
-
-            var classLevel = type.GetCustomAttributes<AuthEndPointAttribute>()
-                  .Select(x =>
-                  {
-                      x.ActionName = "*";
-                      x.ControllerName = type.Name;
-                      return x;
-                  });
-            var methodLevel = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-                .Select(x =>
-                {
-                    return x.GetCustomAttributes<AuthEndPointAttribute>().Select(a =>
-                    {
-                        a.ActionName = x.Name;
-                        a.ControllerName = x.ReflectedType.Name;
-                        a.Routes = x.GetCustomAttributes<HttpMethodAttribute>().ToArray();
-                        a.ActionCanEmpty = a.Routes.Any(x => string.IsNullOrEmpty(x.Template));
-                        return a;
-                    }).ToArray();
-                }).SelectMany((x, y) => x);
-
-
-            return classLevel.Union(methodLevel).ToArray();
-        }
         #endregion
 
     }

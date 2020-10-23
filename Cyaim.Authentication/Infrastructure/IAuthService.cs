@@ -13,22 +13,7 @@ namespace Cyaim.Authentication.Infrastructure
         /// </summary>
         void RegisterAccessCode(string accessCode, bool isAccept);
 
-        /// <summary>
-        /// 从类中获取授权节点信息
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        //AuthEndPointParm[] GetClassAccessParm<T>();
-        AuthEndPointAttribute[] GetClassAccessParm<T>();
 
-        /// <summary>
-        /// 从类中获取授权节点信息
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        //AuthEndPointParm[] GetClassAccessParm(Type type);
-
-        AuthEndPointAttribute[] GetClassAccessParm(Type type);
 
         #region 校验授权
 
