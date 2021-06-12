@@ -123,29 +123,25 @@ namespace Cyaim.Authentication.Infrastructure
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+
             var handler = _authOptions?.ExtractDatabaseAuthEndPoints;
             AuthEndPointAttribute[] parm = null;
             if (handler != null)
             {
                 parm = await handler?.Invoke(authKey, context, _authOptions);
             }
+
             stopwatch.Stop();
             Console.WriteLine("数据库鉴权耗时ms：" + stopwatch.Elapsed.TotalMilliseconds);
 
-            bool isPass;
-            if (parm == null)
-            {
-                isPass = true;
-            }
-            else
-            {
-                isPass = false;
-            }
-            Stopwatch methodWatch = new Stopwatch();
-            methodWatch.Start();
+            bool isPass = parm == null;
+
+            stopwatch.Restart();
+
             (bool IsAuth, bool IsPass) r = (CheckAuth(context, parm), isPass);
-            methodWatch.Stop();
-            Console.WriteLine("通用鉴权耗时ms：" + methodWatch.Elapsed.TotalMilliseconds);
+
+            stopwatch.Stop();
+            Console.WriteLine("通用鉴权耗时ms：" + stopwatch.Elapsed.TotalMilliseconds);
 
             return r;
         }
@@ -228,21 +224,16 @@ namespace Cyaim.Authentication.Infrastructure
 
             string controllerName = context.GetRouteValue(AuthOptions.CONTROLLER)?.ToString().ToLower();
             string actionName = context.GetRouteValue(AuthOptions.ACTION)?.ToString().ToLower();
+            if (string.IsNullOrEmpty(controllerName) || string.IsNullOrEmpty(actionName))
+            {
+                //不在监听范围
+                return true;
+            }
+
             string method = context.Request?.Method?.ToUpper();
             if (string.IsNullOrEmpty(method))
             {
                 return false;
-            }
-            if (string.IsNullOrEmpty(controllerName) || string.IsNullOrEmpty(actionName))
-            {
-                //    var reqPaths = context.Request.Path.Value.Split('/').TakeLast(2).ToArray();
-                //    if (reqPaths.Length < 2)
-                //    {
-                //不在监听范围
-                return true;
-                //    }
-                //    controllerName = reqPaths[0];
-                //    actionName = reqPaths[1];
             }
 
             //搜索节点，路由标记不为空、Http请求方法符合标记的请求方法
@@ -319,7 +310,8 @@ namespace Cyaim.Authentication.Infrastructure
         /// <returns></returns>
         public virtual string GetAuthQuery(HttpContext context, string key)
         {
-            context.Request.Query.TryGetValue(key, out StringValues vs);
+            StringValues vs = default(StringValues);
+            context.Request.Query?.TryGetValue(key, out vs);
             var token = vs.ToString();
 
             return token;
@@ -333,7 +325,8 @@ namespace Cyaim.Authentication.Infrastructure
         /// <returns></returns>
         public virtual string GetAuthHeader(HttpContext context, string key)
         {
-            context.Request.Headers.TryGetValue(key, out StringValues vs);
+            StringValues vs = default(StringValues);
+            context.Request.Headers?.TryGetValue(key, out vs);
             var token = vs.ToString();
 
             return token;
@@ -347,7 +340,8 @@ namespace Cyaim.Authentication.Infrastructure
         /// <returns></returns>
         public virtual string GetAuthCookie(HttpContext context, string key)
         {
-            context.Request.Cookies.TryGetValue(key, out string token);
+            string token = string.Empty;
+            context.Request.Cookies?.TryGetValue(key, out token);
 
             return token;
         }
@@ -364,22 +358,30 @@ namespace Cyaim.Authentication.Infrastructure
             var key = _authOptions.SourceKey;
             string authKey;
 
-            // 搜索凭据位置
-            switch (_authOptions.SourceLocation)
+            try
             {
-                case Microsoft.OpenApi.Models.ParameterLocation.Query:
-                    authKey = GetAuthQuery(context, key);
-                    break;
-                case Microsoft.OpenApi.Models.ParameterLocation.Header:
-                    authKey = GetAuthHeader(context, key);
-                    break;
-                case Microsoft.OpenApi.Models.ParameterLocation.Path:
-                    throw new NotSupportedException("不支持从“Path”搜索凭据");
-                case Microsoft.OpenApi.Models.ParameterLocation.Cookie:
-                    authKey = GetAuthCookie(context, key);
-                    break;
-                default:
-                    throw new NotSupportedException("不支持从该位置搜索凭据");
+                // 搜索凭据位置
+                switch (_authOptions.SourceLocation)
+                {
+                    case Microsoft.OpenApi.Models.ParameterLocation.Query:
+                        authKey = GetAuthQuery(context, key);
+                        break;
+                    case Microsoft.OpenApi.Models.ParameterLocation.Header:
+                        authKey = GetAuthHeader(context, key);
+                        break;
+                    case Microsoft.OpenApi.Models.ParameterLocation.Path:
+                        throw new NotSupportedException("不支持从“Path”搜索凭据");
+                    case Microsoft.OpenApi.Models.ParameterLocation.Cookie:
+                        authKey = GetAuthCookie(context, key);
+                        break;
+                    default:
+                        throw new NotSupportedException("不支持从该位置搜索凭据");
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
 
             return authKey;
@@ -392,11 +394,19 @@ namespace Cyaim.Authentication.Infrastructure
         /// <param name="isAccept"></param>
         public void RegisterAccessCode(string accessCode, bool isAccept)
         {
-            var accs = _memoryCache.GetOrCreate<Dictionary<string, bool>>("Cyaim_AuthEndPoints", x => new Dictionary<string, bool>());
+            try
+            {
+                var accs = _memoryCache.GetOrCreate<Dictionary<string, bool>>("Cyaim_AuthEndPoints", x => new Dictionary<string, bool>());
 
-            accs.TryAdd(accessCode, isAccept);
+                accs.TryAdd(accessCode, isAccept);
 
-            _memoryCache.Set("authEndPoints", accs, cacheEntryOptions);
+                _memoryCache.Set("authEndPoints", accs, cacheEntryOptions);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         #endregion

@@ -5,8 +5,16 @@ using System;
 
 namespace Cyaim.Authentication.Middlewares
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class AuthMiddlewareExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
         public static IApplicationBuilder UseAuth(this IApplicationBuilder app)
         {
             app.UseMiddleware<AuthMiddleware>();

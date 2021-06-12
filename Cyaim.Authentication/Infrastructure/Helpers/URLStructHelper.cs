@@ -11,6 +11,13 @@ namespace Cyaim.Authentication.Infrastructure.Helpers
         /// </summary>
         public struct URLStruct
         {
+
+
+            /// <summary>
+            /// Uri
+            /// </summary>
+            public Uri Uri { get; set; }
+
             /// <summary>
             /// 协议
             /// </summary>
@@ -61,6 +68,8 @@ namespace Cyaim.Authentication.Infrastructure.Helpers
         public static URLStruct GetUrlStruct(string template, string url)
         {
             URLStruct urls = new URLStruct();
+            urls.Uri = new Uri(url);
+            // 控制器和方法要从?开始提取，如果从头取，代理后uri将会有变化
 
             //url = @"https://localhost:5001/api/v1/weatherforecast";
             //url = @"https://localhost:5001/api/v1/weatherforecast/sdfasd";

@@ -90,13 +90,15 @@ namespace Microsoft.Extensions.DependencyInjection
             //authOptions.WatchAuthEndPoint = authEndPointParms.ToArray();
             #endregion
 
+            //正则匹配有鉴权攻击风险！！！   
+
             //加载授权节点
             IEnumerable<AuthEndPointAttribute> authEndPointParms = new AuthEndPointAttribute[0];
             string assemblyName = assembly.FullName.Split()[0]?.Trim(',') + ".Controllers";
             var types = assembly.GetTypes().Where(x => !x.IsNestedPrivate && x.FullName.StartsWith(assemblyName)).ToList();
             foreach (var item in types)
             {
-                var accessParm = AuthServiceCollectionExtensions.GetClassAccessParm(item);
+                AuthEndPointAttribute[] accessParm = AuthServiceCollectionExtensions.GetClassAccessParm_AuthEndPointAttribute(item);
                 authEndPointParms = authEndPointParms.Union(accessParm);
                 foreach (AuthEndPointAttribute parmItem in accessParm)
                 {
@@ -113,10 +115,23 @@ namespace Microsoft.Extensions.DependencyInjection
                     authService.RegisterAccessCode(parmItem.AuthEndPoint, parmItem.IsAllow);
 
                     Console.WriteLine($"加载成功 -> {parmItem.AuthEndPoint} 允许访问");
-
                 }
 
+                AuthEnableRegexAttribute[] accessRegexParm = AuthServiceCollectionExtensions.GetClassAccessParm_AuthEnableRegexAttribute(item);
+                foreach (AuthEnableRegexAttribute parmItem in accessRegexParm)
+                {
+                    if (parmItem == null)
+                    {
+                        continue;
+                    }
+
+                    parmItem.AuthEndPoint = $"{authOptions.PreAccessEndPointKey}:Regex⊇{parmItem.AuthEndPoint}";
+                    authService.RegisterAccessCode(parmItem.AuthEndPoint, parmItem.IsAllow);
+
+                    Console.WriteLine($"加载成功 -> {parmItem.AuthEndPoint} 允许访问");
+                }
             }
+
 
             authOptions.WatchAuthEndPoint = authEndPointParms.ToArray();
 
@@ -136,10 +151,10 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static AuthEndPointAttribute[] GetClassAccessParm<T>()
+        public static AuthEndPointAttribute[] GetClassAccessParm_AuthEndPointAttribute<T>()
         {
             var type = typeof(T);
-            return GetClassAccessParm(type);
+            return GetClassAccessParm_AuthEndPointAttribute(type);
         }
 
         /// <summary>
@@ -147,7 +162,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static AuthEndPointAttribute[] GetClassAccessParm(Type type)
+        public static AuthEndPointAttribute[] GetClassAccessParm_AuthEndPointAttribute(Type type)
         {
             var classLevel = type.GetCustomAttributes<AuthEndPointAttribute>()
                   .Select(x =>
@@ -172,5 +187,29 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return classLevel.Union(methodLevel).ToArray();
         }
+
+        /// <summary>
+        /// 获取程序集Controller中的权限节点
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static AuthEnableRegexAttribute[] GetClassAccessParm_AuthEnableRegexAttribute<T>()
+        {
+            var type = typeof(T);
+            return GetClassAccessParm_AuthEnableRegexAttribute(type);
+        }
+
+        /// <summary>
+        /// 获取程序集Controller中的权限节点
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static AuthEnableRegexAttribute[] GetClassAccessParm_AuthEnableRegexAttribute(Type type)
+        {
+            var classLevel = type.GetCustomAttributes<AuthEnableRegexAttribute>();
+
+            return classLevel.ToArray();
+        }
+
     }
 }

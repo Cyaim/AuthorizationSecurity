@@ -60,7 +60,7 @@ namespace Cyaim.Authentication.MigrateCLI
             var types = assembly.GetTypes().Where(x => !x.IsNestedPrivate && x.FullName.StartsWith(assemblyName)).ToList();
             foreach (var item in types)
             {
-                var accessParm = AuthServiceCollectionExtensions.GetClassAccessParm(item);
+                var accessParm = AuthServiceCollectionExtensions.GetClassAccessParm_AuthEndPointAttribute(item);
                 authEndPointParms = authEndPointParms.Union(accessParm);
                 foreach (AuthEndPointAttribute parmItem in accessParm)
                 {

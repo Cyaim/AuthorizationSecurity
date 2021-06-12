@@ -50,7 +50,7 @@ namespace Cyaim.Authentication.Infrastructure.Attributes
         public string AuthEndPoint { get; set; }
 
         /// <summary>
-        /// 是否允许访问
+        /// 是否允许访问，默认允许
         /// </summary>
         public bool IsAllow { get; set; } = true;
 

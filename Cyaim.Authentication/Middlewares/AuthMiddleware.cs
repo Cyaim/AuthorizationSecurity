@@ -27,6 +27,13 @@ namespace Cyaim.Authentication.Middlewares
         /// </summary>
         public readonly IOptions<AuthOptions> _authOptions;
 
+        /// <summary>
+        /// Auth middleware
+        /// </summary>
+        /// <param name="authOptions"></param>
+        /// <param name="next"></param>
+        /// <param name="authService"></param>
+        /// <param name="loggerFactory"></param>
         public AuthMiddleware(
            IOptions<AuthOptions> authOptions,
            RequestDelegate next,

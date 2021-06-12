@@ -18,12 +18,7 @@ namespace Cyaim.Authentication.Infrastructure
         public AccessSourceEnum[] AccessSources { get; } = { AccessSourceEnum.AuthCenter, AccessSourceEnum.Cache, AccessSourceEnum.Database, AccessSourceEnum.Default };
 
         /// <summary>
-        /// 是否异步检测数据序列
-        /// </summary>
-        public bool CheckAsyncSource { get; set; } = false;
-
-        /// <summary>
-        /// Http访问凭据Key
+        /// 访问凭据Key
         /// </summary>
         public string SourceKey { get; set; } = "Authorization";
 
@@ -33,7 +28,7 @@ namespace Cyaim.Authentication.Infrastructure
         public string PreAccessEndPointKey { get; set; }
 
         /// <summary>
-        /// Http凭据位置
+        /// Http凭据位置，默认从Header提取
         /// </summary>
         public ParameterLocation SourceLocation { get; set; } = ParameterLocation.Header;
 
@@ -58,6 +53,7 @@ namespace Cyaim.Authentication.Infrastructure
         /// </summary>
         /// <param name="authKey">请求凭据</param>
         /// <param name="httpContext">HTTP上下文</param>
+        /// <param name="authOptions">授权配置</param>
         /// <returns></returns>
         public delegate Task<AuthEndPointAttribute[]> ExtractAuthEndPointsHandler(string authKey, HttpContext httpContext, AuthOptions authOptions);
 
@@ -120,9 +116,15 @@ namespace Cyaim.Authentication.Infrastructure
     }
 
 
-
-    public class HttpMethod
+    /// <summary>
+    /// HTTP 方法
+    /// </summary>
+    public static class HttpMethod
     {
+
+        /// <summary>
+        /// HTTP 请求方法映射
+        /// </summary>
         public static readonly Dictionary<string, int> HttpMethodMaps = new Dictionary<string, int>()
         {
             { "GET",(int)HttpMethodEnum.GET},
@@ -135,6 +137,10 @@ namespace Cyaim.Authentication.Infrastructure
             { "TRACE",(int)HttpMethodEnum.TRACE},
             { "OPTIONS",(int)HttpMethodEnum.OPTIONS},
         };
+
+        /// <summary>
+        /// HTTP 请求方法枚举
+        /// </summary>
         public enum HttpMethodEnum
         {
             GET = 2,
