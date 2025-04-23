@@ -1,12 +1,12 @@
 ﻿using Cyaim.Authentication.Infrastructure.Attributes;
 using Microsoft.AspNetCore.Http;
-using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using static Cyaim.Authentication.Infrastructure.AuthenticationService;
+using static Cyaim.Authentication.Infrastructure.HttpMethod;
 
 namespace Cyaim.Authentication.Infrastructure
 {
@@ -147,12 +147,13 @@ namespace Cyaim.Authentication.Infrastructure
             { "OPTIONS",(int)HttpMethodEnum.OPTIONS},
         };
 
+#pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
+
         /// <summary>
         /// HTTP 请求方法枚举
         /// </summary>
         public enum HttpMethodEnum
         {
-#pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
             GET = 2,
             POST = 4,
             DELETE = 8,
@@ -162,7 +163,17 @@ namespace Cyaim.Authentication.Infrastructure
             CONNECT = 128,
             TRACE = 256,
             OPTIONS = 512,
-#pragma warning restore CS1591 // 缺少对公共可见类型或成员的 XML 注释
         }
+
+        public enum ParameterLocation
+        {
+            Query,
+            Header,
+            Path,
+            Cookie,
+        }
+
+
+#pragma warning restore CS1591 // 缺少对公共可见类型或成员的 XML 注释
     }
 }

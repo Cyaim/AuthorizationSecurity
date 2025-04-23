@@ -13,6 +13,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static Cyaim.Authentication.Infrastructure.HttpMethod;
 
 namespace Cyaim.Authentication.Infrastructure
 {
@@ -380,15 +381,15 @@ namespace Cyaim.Authentication.Infrastructure
                 // 搜索凭据位置
                 switch (_authOptions.SourceLocation)
                 {
-                    case Microsoft.OpenApi.Models.ParameterLocation.Query:
+                    case ParameterLocation.Query:
                         authKey = GetAuthQuery(context, key);
                         break;
-                    case Microsoft.OpenApi.Models.ParameterLocation.Header:
+                    case ParameterLocation.Header:
                         authKey = GetAuthHeader(context, key);
                         break;
-                    case Microsoft.OpenApi.Models.ParameterLocation.Path:
+                    case ParameterLocation.Path:
                         throw new NotSupportedException("不支持从“Path”搜索凭据");
-                    case Microsoft.OpenApi.Models.ParameterLocation.Cookie:
+                    case ParameterLocation.Cookie:
                         authKey = GetAuthCookie(context, key);
                         break;
                     default:

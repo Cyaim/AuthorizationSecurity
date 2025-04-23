@@ -7,7 +7,6 @@ using Cyaim.Authentication.Infrastructure;
 using Cyaim.Authentication.Infrastructure.Attributes;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Abstractions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
