@@ -10,6 +10,9 @@ using static Cyaim.Authentication.Infrastructure.AuthenticationService;
 
 namespace Cyaim.Authentication.Infrastructure
 {
+    /// <summary>
+    /// 权限配置
+    /// </summary>
     public class AuthOptions
     {
         /// <summary>
@@ -67,7 +70,13 @@ namespace Cyaim.Authentication.Infrastructure
         /// </summary>
         public ExtractAuthEndPointsHandler ExtractDatabaseAuthEndPoints { get; set; } /*= new ExtractAuthEndPointsHandler(DefaultExtractDatabaseAuthEndPoints);*/
 
+        /// <summary>
+        /// 控制器KEY
+        /// </summary>
         public const string CONTROLLER = "controller";
+        /// <summary>
+        /// 动作KEY
+        /// </summary>
         public const string ACTION = "action";
     }
 
@@ -143,6 +152,7 @@ namespace Cyaim.Authentication.Infrastructure
         /// </summary>
         public enum HttpMethodEnum
         {
+#pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
             GET = 2,
             POST = 4,
             DELETE = 8,
@@ -152,6 +162,7 @@ namespace Cyaim.Authentication.Infrastructure
             CONNECT = 128,
             TRACE = 256,
             OPTIONS = 512,
+#pragma warning restore CS1591 // 缺少对公共可见类型或成员的 XML 注释
         }
     }
 }

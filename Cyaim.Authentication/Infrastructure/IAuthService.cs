@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace Cyaim.Authentication.Infrastructure
 {
+    /// <summary>
+    /// 鉴权服务接口
+    /// </summary>
     public interface IAuthService
     {
 

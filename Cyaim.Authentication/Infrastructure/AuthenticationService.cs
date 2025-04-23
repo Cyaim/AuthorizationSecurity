@@ -21,14 +21,31 @@ namespace Cyaim.Authentication.Infrastructure
     /// </summary>
     public class AuthenticationService : IAuthService
     {
+        /// <summary>
+        /// 权限配置
+        /// </summary>
         public readonly AuthOptions _authOptions;
+        /// <summary>
+        /// 权限节点缓存
+        /// </summary>
         public readonly IMemoryCache _memoryCache;
 
+        /// <summary>
+        /// 缓存配置
+        /// </summary>
         public readonly MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions()
              .SetPriority(CacheItemPriority.NeverRemove);
 
+        /// <summary>
+        /// 权限节点
+        /// </summary>
         public readonly Dictionary<string, bool> EndPoints = null;
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="authOptions"></param>
+        /// <param name="memoryCache"></param>
         public AuthenticationService(AuthOptions authOptions, IMemoryCache memoryCache)
         {
             _authOptions = authOptions;

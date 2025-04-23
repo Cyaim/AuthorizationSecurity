@@ -1,26 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/Cyaim/AuthorizationSecurity</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Cyaim/AuthorizationSecurity</RepositoryUrl>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Authors>Psyche</Authors>
-    <Company>Cyaim Studio</Company>
-    <Description>AuthorizationSecurity is based on endpoint authorization framework.You only write database code and mark endpoint can complete the authorization.</Description>
-    <PackageLicenseExpression></PackageLicenseExpression>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.1;net8.0;net9.0</TargetFrameworks>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageProjectUrl>https://github.com/Cyaim/AuthorizationSecurity</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Cyaim/AuthorizationSecurity</RepositoryUrl>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<Authors>Psyche</Authors>
+		<Company>Cyaim Studio</Company>
+		<Description>AuthorizationSecurity is based on endpoint authorization framework.You only write database code and mark endpoint can complete the authorization.</Description>
+		<PackageLicenseExpression></PackageLicenseExpression>
+		<Version>1.1.0</Version>
+		<PackageVersion>1.1.0</PackageVersion>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>E:\WorkSpaces\Cyaim.Authentication\AuthorizationSecurity\Cyaim.Authentication\Cyaim.Authentication.xml</DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>E:\WorkSpaces\Cyaim.Authentication\AuthorizationSecurity\Cyaim.Authentication\Cyaim.Authentication.xml</DocumentationFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.9" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
-    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
+		<PackageReference Include="Microsoft.OpenApi" Version="1.6.24" />
+	</ItemGroup>
 
 </Project>

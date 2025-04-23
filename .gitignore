@@ -2,13 +2,19 @@
 # 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
 ################################################################################
 
-/Cyaim.Authentication/obj
-/.vs
-/Cyaim.Authentication/.vs/Cyaim.Authentication/DesignTimeBuild
-/Cyaim.Authentication/bin/Debug
-/Cyaim.Authentication.MigrateCLI/.vs/Cyaim.Authentication.MigrateCLI/v16
-/Cyaim.Authentication.MigrateCLI/bin/Debug/netcoreapp3.1
-/Cyaim.Authentication.MigrateCLI/obj
-/Cyaim.Authentication/Properties/PublishProfiles
 *.user
-/Cyaim.Authentication/bin/Release
+/.vs
+/Cyaim.Authentication/obj
+/Cyaim.Authentication/bin
+/Cyaim.Authentication/.vs
+/Cyaim.Authentication/Properties/PublishProfiles
+
+/Cyaim.Authentication.MigrateCLI/.vs
+/Cyaim.Authentication.MigrateCLI/bin
+/Cyaim.Authentication.MigrateCLI/obj
+/Cyaim.Authentication.MigrateCLI/Properties
+
+/Cyaim.Authentication.OpenApi/.vs
+/Cyaim.Authentication.OpenApi/bin
+/Cyaim.Authentication.OpenApi/obj
+/Cyaim.Authentication.OpenApi/Properties

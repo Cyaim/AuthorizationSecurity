@@ -68,7 +68,11 @@ namespace Cyaim.Authentication.Middlewares
             _authOptions = authOptions;
         }
 
-
+        /// <summary>
+        /// 中间件执行器
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public async Task Invoke(HttpContext context)
         {
 
@@ -86,12 +90,7 @@ namespace Cyaim.Authentication.Middlewares
             var noAccessParm = _authOptions.Value.NonAccessParm;
             if (noAccessParm == null)
             {
-                context.Response.StatusCode = 403;
-                context.Response.ContentType = "application/json";
-                await context.Response.WriteAsync($@"{{
-                    ""status"":403,
-                    ""msg"":""No permission""
-                }}");
+                throw new UnauthorizedAccessException($"凭据 {token} -> {context.Request.Scheme}://{context.Request.Host}{context.Request.Path.Value} 无权限访问");
             }
             else
             {

@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Cyaim.Authentication.Infrastructure.Attributes
 {
+    /// <summary>
+    /// 权限节点特性
+    /// </summary>
     public interface IAuthEndPointAttribute : IAuthMetadata
     {
         /// <summary>

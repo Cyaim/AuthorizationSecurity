@@ -4,6 +4,10 @@ using System.Text;
 
 namespace Cyaim.Authentication.Infrastructure.Helpers
 {
+    /// <summary>
+    /// 解析URL
+    /// </summary>
+    [Obsolete("仅旧版本使用,.NET 8.0以上请使用HttpContext实例方法GetRouteData()")]
     public class URLStructHelper
     {
         /// <summary>
@@ -49,6 +53,7 @@ namespace Cyaim.Authentication.Infrastructure.Helpers
             public string QueryString { get; set; }
 
 
+#pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
             public const string MARK_CONTROLLER = "{controller}";
             public const string MARK_ACTION = "{action}";
             public static readonly int MarkControllerLength = MARK_CONTROLLER.Length;
@@ -57,6 +62,8 @@ namespace Cyaim.Authentication.Infrastructure.Helpers
             public const string MARK_SCHEME = ":/";
             public const char MARK_PATHSPLIT = '/';
             public const char MARK_QUERYSPLIT = '?';
+#pragma warning restore CS1591 // 缺少对公共可见类型或成员的 XML 注释
+
         }
 
         /// <summary>

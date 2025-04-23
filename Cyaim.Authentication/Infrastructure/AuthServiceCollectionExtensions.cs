@@ -114,7 +114,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
                     authService.RegisterAccessCode(parmItem.AuthEndPoint, parmItem.IsAllow);
 
-                    Console.WriteLine($"加载成功 -> {parmItem.AuthEndPoint} 允许访问");
+                    Console.WriteLine($"权限节点加载成功 -> {parmItem.AuthEndPoint}");
                 }
 
                 AuthEnableRegexAttribute[] accessRegexParm = AuthServiceCollectionExtensions.GetClassAccessParm_AuthEnableRegexAttribute(item);
@@ -128,7 +128,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     parmItem.AuthEndPoint = $"{authOptions.PreAccessEndPointKey}:Regex⊇{parmItem.AuthEndPoint}";
                     authService.RegisterAccessCode(parmItem.AuthEndPoint, parmItem.IsAllow);
 
-                    Console.WriteLine($"加载成功 -> {parmItem.AuthEndPoint} 允许访问");
+                    Console.WriteLine($"权限节点加载成功 -> {parmItem.AuthEndPoint}");
                 }
             }
 
