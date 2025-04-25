@@ -77,9 +77,7 @@ namespace Cyaim.Authentication.Infrastructure
                         {
                             var exr = await CheckAuthCache(context, authKey);
                             if (exr.IsPass)
-                            {
                                 continue;
-                            }
                             return exr.IsAuth;
                         }
                     case AccessSourceEnum.Database:
@@ -87,7 +85,6 @@ namespace Cyaim.Authentication.Infrastructure
                             var exr = await CheckAuthDatabase(context, authKey);
                             if (exr.IsPass)
                             {
-                                Console.WriteLine();
                                 Console.WriteLine($"节点  ->  {context.Request.Path}  因不在数据库权限监测范围,跳出数据库鉴权");
                                 continue;
                             }
@@ -115,19 +112,9 @@ namespace Cyaim.Authentication.Infrastructure
 
             AuthEndPointAttribute[] parm = null;
             if (handler != null)
-            {
                 parm = await handler?.Invoke(authKey, context, _authOptions);
-            }
 
-            bool isPass;
-            if (parm == null)
-            {
-                isPass = true;
-            }
-            else
-            {
-                isPass = false;
-            }
+            bool isPass = parm == null;
             return (CheckAuth(context, parm), isPass);
         }
 
@@ -243,24 +230,17 @@ namespace Cyaim.Authentication.Infrastructure
             string controllerName = context.GetRouteValue(AuthOptions.CONTROLLER)?.ToString().ToLower();
             string actionName = context.GetRouteValue(AuthOptions.ACTION)?.ToString().ToLower();
             if (string.IsNullOrEmpty(controllerName) || string.IsNullOrEmpty(actionName))
-            {
                 //不在监听范围
                 return true;
-            }
 
             string method = context.Request?.Method?.ToUpper();
             if (string.IsNullOrEmpty(method))
-            {
                 return false;
-            }
 
             //搜索节点，路由标记不为空、Http请求方法符合标记的请求方法
-            var matcheps = authEndPoints.Where(x => x.Routes != null && x.Routes.Any(y => y.HttpMethods.Any(z => z?.ToUpper() == method)));
+            var matchEndPoints = authEndPoints.Where(x => x.Routes != null && x.Routes.Any(y => y.HttpMethods.Any(z => z?.ToUpper() == method)));
             //搜索节点，忽略Controller大小写、Action匹配小写
-            var allowep = matcheps.FirstOrDefault(x =>
-            x.ControllerName.IndexOf(controllerName, StringComparison.CurrentCultureIgnoreCase) == 0 &&
-            x.ActionName?.ToLower() == actionName);
-
+            var allowEndPoint = matchEndPoints.FirstOrDefault(x => x.ControllerName.IndexOf(controllerName, StringComparison.CurrentCultureIgnoreCase) == 0 && x.ActionName?.ToLower() == actionName);
 
             ////搜索节点，忽略Controller大小写、Action匹配小写
             //var alloweps = matcheps.Where(x =>
@@ -271,16 +251,16 @@ namespace Cyaim.Authentication.Infrastructure
             ////&& x.ActionName?.ToLower() == actionName);
             ////var allowep = alloweps.FirstOrDefault(x => watchep.Routes.Any(y => y.Template?.ToLower() == x.ActionName?.ToLower()));
 
-            //允许访问
-            bool? isAllow = allowep?.IsAllow;
-            bool? allowGuest = allowep?.AllowGuest;
+            // 允许访问
+            bool? isAllow = allowEndPoint?.IsAllow;
+            bool? allowGuest = allowEndPoint?.AllowGuest;
             if ((allowGuest.HasValue && allowGuest.Value) || (isAllow.HasValue && isAllow.Value))
             {
                 return true;
             }
 
-            //当被访问的Action没有标记授权节点时，查找Controller授权节点
-            if (allowep == null)
+            // 当被访问的Action没有标记授权节点时，查找Controller授权节点
+            if (allowEndPoint == null)
             {
                 var allowAll = authEndPoints.FirstOrDefault(x => x.ControllerName?.ToLower() == controllerName.ToLower() + AuthOptions.CONTROLLER && x.ActionName == "*");
                 var isAllowAll = allowAll?.IsAllow;
