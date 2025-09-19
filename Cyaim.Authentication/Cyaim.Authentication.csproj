@@ -11,7 +11,7 @@
 		<Description>AuthorizationSecurity is based on endpoint authorization framework.You only write database code and mark endpoint can complete the authorization.</Description>
 		<PackageLicenseExpression></PackageLicenseExpression>
 		<Version>1.1.2</Version>
-		<PackageVersion>1.1.1</PackageVersion>
+		<PackageVersion>1.1.2</PackageVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
