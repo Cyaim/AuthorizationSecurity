@@ -10,6 +10,11 @@ namespace Cyaim.Authentication.Infrastructure
     /// </summary>
     public interface IAuthService
     {
+        /// <summary>
+        ///  从初始化传进来的AuthOptions
+        /// </summary>
+        AuthOptions AuthOptions { get; set; }
+
 
         /// <summary>
         /// 注册节点
@@ -42,7 +47,7 @@ namespace Cyaim.Authentication.Infrastructure
         /// 检验凭据
         /// </summary>
         /// <returns></returns>
-         Task<bool> CheckAuthorization(HttpContext context);
+        Task<bool> CheckAuthorization(HttpContext context);
 
         /// <summary>
         /// 从Header搜索凭据

@@ -25,7 +25,7 @@ namespace Cyaim.Authentication.Infrastructure
         /// <summary>
         /// 权限配置
         /// </summary>
-        public readonly AuthOptions _authOptions;
+        public AuthOptions AuthOptions { get; set; }
         /// <summary>
         /// 权限节点缓存
         /// </summary>
@@ -45,11 +45,9 @@ namespace Cyaim.Authentication.Infrastructure
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="authOptions"></param>
         /// <param name="memoryCache"></param>
-        public AuthenticationService(AuthOptions authOptions, IMemoryCache memoryCache)
+        public AuthenticationService(IMemoryCache memoryCache)
         {
-            _authOptions = authOptions;
             _memoryCache = memoryCache;
 
             memoryCache.TryGetValue("Cyaim_AuthEndPoints", out EndPoints);
@@ -67,7 +65,7 @@ namespace Cyaim.Authentication.Infrastructure
             string authKey = GetAuthorizationValue(context);
 
             //同步检测
-            foreach (AccessSourceEnum item in _authOptions.AccessSources)
+            foreach (AccessSourceEnum item in AuthOptions.AccessSources)
             {
                 switch (item)
                 {
@@ -108,11 +106,11 @@ namespace Cyaim.Authentication.Infrastructure
         /// <returns></returns>
         public async Task<(bool IsAuth, bool IsPass)> CheckAuthCache(HttpContext context, string authKey)
         {
-            var handler = _authOptions?.ExtractCacheAuthEndPoints;
+            var handler = AuthOptions?.ExtractCacheAuthEndPoints;
 
             AuthEndPointAttribute[] parm = null;
             if (handler != null)
-                parm = await handler?.Invoke(authKey, context, _authOptions);
+                parm = await handler?.Invoke(authKey, context, AuthOptions);
 
             bool isPass = parm == null;
             return (CheckAuth(context, parm), isPass);
@@ -129,11 +127,11 @@ namespace Cyaim.Authentication.Infrastructure
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var handler = _authOptions?.ExtractDatabaseAuthEndPoints;
+            var handler = AuthOptions?.ExtractDatabaseAuthEndPoints;
             AuthEndPointAttribute[] parm = null;
             if (handler != null)
             {
-                parm = await handler?.Invoke(authKey, context, _authOptions);
+                parm = await handler?.Invoke(authKey, context, AuthOptions);
             }
 
             stopwatch.Stop();
@@ -160,7 +158,7 @@ namespace Cyaim.Authentication.Infrastructure
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            bool isAccess = CheckAuth(context, _authOptions.WatchAuthEndPoint);
+            bool isAccess = CheckAuth(context, AuthOptions.WatchAuthEndPoint);
             stopwatch.Stop();
             Console.WriteLine("默认鉴权耗时ms:" + stopwatch.ElapsedMilliseconds);
 
@@ -353,13 +351,13 @@ namespace Cyaim.Authentication.Infrastructure
         /// <returns></returns>
         public string GetAuthorizationValue(HttpContext context)
         {
-            var key = _authOptions.SourceKey;
+            var key = AuthOptions.SourceKey;
             string authKey;
 
             try
             {
                 // 搜索凭据位置
-                switch (_authOptions.SourceLocation)
+                switch (AuthOptions.SourceLocation)
                 {
                     case ParameterLocation.Query:
                         authKey = GetAuthQuery(context, key);

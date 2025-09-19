@@ -52,23 +52,20 @@ namespace Cyaim.Authentication.Infrastructure
         public NonAccessParm NonAccessParm { get; set; }
 
         /// <summary>
-        /// 提取授权节点
-        /// </summary>
+        /// 提取授权节点 从缓存提取
         /// <param name="authKey">请求凭据</param>
         /// <param name="httpContext">HTTP上下文</param>
         /// <param name="authOptions">授权配置</param>
-        /// <returns></returns>
-        public delegate Task<AuthEndPointAttribute[]> ExtractAuthEndPointsHandler(string authKey, HttpContext httpContext, AuthOptions authOptions);
+        /// </summary>
+        public Func<string, HttpContext, AuthOptions, Task<AuthEndPointAttribute[]>> ExtractCacheAuthEndPoints { get; set; } /*= new ExtractAuthEndPointsHandler(DefaultExtractCacheAuthEndPoints);*/
 
         /// <summary>
-        /// 从缓存提取
+        /// 提取授权节点 从数据库提取
+        /// <param name="authKey">请求凭据</param>
+        /// <param name="httpContext">HTTP上下文</param>
+        /// <param name="authOptions">授权配置</param>
         /// </summary>
-        public ExtractAuthEndPointsHandler ExtractCacheAuthEndPoints { get; set; } /*= new ExtractAuthEndPointsHandler(DefaultExtractCacheAuthEndPoints);*/
-
-        /// <summary>
-        /// 从数据库提取
-        /// </summary>
-        public ExtractAuthEndPointsHandler ExtractDatabaseAuthEndPoints { get; set; } /*= new ExtractAuthEndPointsHandler(DefaultExtractDatabaseAuthEndPoints);*/
+        public Func<string, HttpContext, AuthOptions, Task<AuthEndPointAttribute[]>> ExtractDatabaseAuthEndPoints { get; set; } /*= new ExtractAuthEndPointsHandler(DefaultExtractDatabaseAuthEndPoints);*/
 
         /// <summary>
         /// 控制器KEY
