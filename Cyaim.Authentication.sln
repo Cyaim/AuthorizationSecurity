@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyaim.Authentication.Abstractions", "src\Cyaim.Authentication.Abstractions\Cyaim.Authentication.Abstractions.csproj", "{FB16022F-AB25-4563-8161-B8EA0A175819}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyaim.Authentication.Core", "src\Cyaim.Authentication.Core\Cyaim.Authentication.Core.csproj", "{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,11 +31,24 @@ Global
 		{FB16022F-AB25-4563-8161-B8EA0A175819}.Release|x64.Build.0 = Release|Any CPU
 		{FB16022F-AB25-4563-8161-B8EA0A175819}.Release|x86.ActiveCfg = Release|Any CPU
 		{FB16022F-AB25-4563-8161-B8EA0A175819}.Release|x86.Build.0 = Release|Any CPU
+		{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523}.Debug|x64.Build.0 = Debug|Any CPU
+		{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523}.Debug|x86.Build.0 = Debug|Any CPU
+		{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523}.Release|x64.ActiveCfg = Release|Any CPU
+		{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523}.Release|x64.Build.0 = Release|Any CPU
+		{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523}.Release|x86.ActiveCfg = Release|Any CPU
+		{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FB16022F-AB25-4563-8161-B8EA0A175819} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{4A6F9D97-0E0A-4D1B-A354-6F16A7FC7523} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 EndGlobal
