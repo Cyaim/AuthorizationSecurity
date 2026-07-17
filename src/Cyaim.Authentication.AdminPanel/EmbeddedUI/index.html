@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cyaim 权限管理面板</title>
+<style>
+:root{
+  --bg:#f3f5f8; --panel:#ffffff; --panel2:#f8fafc; --text:#1c2430; --muted:#68758a;
+  --border:#dfe4ec; --primary:#2f6fed; --primary-hover:#245cd0; --on-primary:#ffffff;
+  --danger:#d23b3b; --danger-bg:rgba(210,59,59,.08); --ok:#1f9d63;
+  --sidebar-bg:#16202e; --sidebar-text:#c6d0de; --sidebar-active:#2f6fed;
+  --shadow:0 8px 28px rgba(16,24,40,.10); --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0e1116; --panel:#161b23; --panel2:#1b212b; --text:#e6eaf1; --muted:#8b98ab;
+    --border:#2a3240; --primary:#4d84f7; --primary-hover:#6a99f9; --on-primary:#0d1420;
+    --danger:#e55f5f; --danger-bg:rgba(229,95,95,.12); --ok:#3dbb80;
+    --sidebar-bg:#10151d; --sidebar-text:#9aa7ba; --sidebar-active:#4d84f7;
+    --shadow:0 8px 28px rgba(0,0,0,.45);
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font:14px/1.6 "Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--text)}
+button{font:inherit;cursor:pointer}
+input,textarea,select{font:inherit;color:inherit}
+.hidden{display:none !important}
+
+/* ---------- 通用控件 ---------- */
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--panel);
+  color:var(--text);border-radius:8px;padding:7px 14px;transition:.15s}
+.btn:hover{border-color:var(--primary);color:var(--primary)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.btn-primary:hover{background:var(--primary-hover);border-color:var(--primary-hover);color:var(--on-primary)}
+.btn-danger{color:var(--danger);border-color:var(--danger)}
+.btn-danger:hover{background:var(--danger);color:#fff}
+.btn-sm{padding:3px 10px;font-size:12.5px;border-radius:6px}
+.inp,textarea.inp,select.inp{width:100%;background:var(--panel2);border:1px solid var(--border);
+  border-radius:8px;padding:8px 11px;outline:none;transition:border-color .15s}
+.inp:focus{border-color:var(--primary)}
+textarea.inp{resize:vertical;min-height:90px}
+.badge{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px;border:1px solid var(--border);background:var(--panel2)}
+.badge-ok{color:var(--ok);border-color:var(--ok)}
+.badge-off{color:var(--muted)}
+.badge-danger{color:var(--danger);border-color:var(--danger)}
+.muted{color:var(--muted)}
+.spacer{flex:1}
+
+/* ---------- 登录 ---------- */
+#login-view{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{width:400px;max-width:100%;background:var(--panel);border:1px solid var(--border);
+  border-radius:14px;box-shadow:var(--shadow);padding:34px 34px 28px}
+.login-logo{width:46px;height:46px;border-radius:12px;background:var(--primary);color:var(--on-primary);
+  display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;margin-bottom:14px}
+.login-card h1{font-size:20px;margin-bottom:4px}
+.login-card .sub{color:var(--muted);margin-bottom:20px}
+.login-tabs{display:flex;gap:4px;background:var(--panel2);border:1px solid var(--border);border-radius:9px;padding:3px;margin-bottom:18px}
+.login-tabs button{flex:1;border:0;background:transparent;color:var(--muted);border-radius:7px;padding:6px}
+.login-tabs button.active{background:var(--panel);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.login-card .frow{margin-bottom:14px}
+.login-err{color:var(--danger);font-size:13px;min-height:20px;margin-bottom:6px}
+
+/* ---------- 应用布局 ---------- */
+#app-view{display:flex;min-height:100vh}
+#sidebar{width:222px;flex:0 0 222px;background:var(--sidebar-bg);color:var(--sidebar-text);
+  display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:10px;padding:18px 18px 14px;color:#fff;font-weight:600;font-size:15px}
+.brand-logo{width:30px;height:30px;border-radius:8px;background:var(--sidebar-active);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:700;flex:0 0 30px}
+#nav{flex:1;padding:6px 10px;display:flex;flex-direction:column;gap:2px}
+.nav-item{display:block;padding:9px 12px;border-radius:8px;color:var(--sidebar-text);text-decoration:none;cursor:pointer;transition:.15s}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-item.active{background:var(--sidebar-active);color:#fff}
+.sidebar-foot{padding:14px 16px;border-top:1px solid rgba(255,255,255,.08);font-size:13px}
+.sidebar-foot .who{color:#fff;word-break:break-all}
+.sidebar-foot .role{font-size:12px;margin:2px 0 10px;word-break:break-all}
+.btn-logout{width:100%;border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--sidebar-text);
+  border-radius:8px;padding:6px}
+.btn-logout:hover{border-color:#fff;color:#fff}
+#main{flex:1;min-width:0;display:flex;flex-direction:column}
+#topbar{padding:20px 28px 0}
+#topbar h1{font-size:21px}
+#content{padding:20px 28px 40px;display:flex;flex-direction:column;gap:16px}
+
+/* ---------- 卡片 / 表格 ---------- */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.card-pad{padding:16px 18px}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.toolbar .inp{width:auto;min-width:200px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.stat{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px}
+.stat .num{font-size:28px;font-weight:700;line-height:1.2}
+.stat .lbl{color:var(--muted);font-size:13px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;white-space:nowrap}
+td.wrap{white-space:normal;word-break:break-all;min-width:140px}
+th{background:var(--panel2);color:var(--muted);font-weight:600;font-size:12.5px}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--panel2)}
+tr.row-denied{background:var(--danger-bg)}
+tr.row-denied:hover{background:var(--danger-bg)}
+tr.row-denied td:first-child{box-shadow:inset 3px 0 0 var(--danger)}
+.empty{padding:26px;text-align:center;color:var(--muted)}
+.pager{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--border);font-size:13px}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+.group-head td{background:var(--panel2);font-weight:600;color:var(--text)}
+
+/* ---------- 标签输入 ---------- */
+.tags{display:flex;flex-wrap:wrap;gap:6px;background:var(--panel2);border:1px solid var(--border);
+  border-radius:8px;padding:6px 8px;cursor:text;min-height:38px}
+.tags:focus-within{border-color:var(--primary)}
+.tag{display:inline-flex;align-items:center;gap:4px;background:var(--panel);border:1px solid var(--border);
+  border-radius:6px;padding:1px 4px 1px 8px;font-size:12.5px;word-break:break-all}
+.tag-x{border:0;background:transparent;color:var(--muted);font-size:14px;padding:0 4px;border-radius:4px}
+.tag-x:hover{color:var(--danger)}
+.tags-inp{flex:1;min-width:90px;border:0;background:transparent;outline:none;padding:2px}
+
+/* ---------- 表单 / 模态 ---------- */
+.frow{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+.frow>label{font-size:13px;color:var(--muted)}
+.frow-inline{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:13px}
+.chk{display:inline-flex;align-items:center;gap:7px;cursor:pointer}
+.chk input{width:15px;height:15px;accent-color:var(--primary)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+@media (max-width:640px){.grid2{grid-template-columns:1fr}}
+.modal-overlay{position:fixed;inset:0;background:rgba(9,13,20,.55);display:flex;align-items:flex-start;
+  justify-content:center;padding:46px 16px;z-index:100;overflow-y:auto}
+.modal{width:560px;max-width:100%;background:var(--panel);border:1px solid var(--border);border-radius:14px;
+  box-shadow:var(--shadow)}
+.modal-lg{width:720px}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid var(--border);font-weight:600;font-size:15px}
+.modal-close{border:0;background:transparent;color:var(--muted);font-size:20px;line-height:1;padding:2px 8px;border-radius:6px}
+.modal-close:hover{color:var(--danger)}
+.modal-body{padding:18px 20px 6px;max-height:64vh;overflow-y:auto}
+.modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--border)}
+.secret-box{background:var(--panel2);border:1px dashed var(--primary);border-radius:8px;padding:12px;
+  font-family:Consolas,monospace;word-break:break-all;margin:8px 0 12px}
+
+/* ---------- Toast ---------- */
+#toasts{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;gap:8px;z-index:200}
+.toast{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--ok);border-radius:9px;
+  box-shadow:var(--shadow);padding:10px 16px;max-width:360px;word-break:break-all;animation:toast-in .2s ease}
+.toast.err{border-left-color:var(--danger)}
+@keyframes toast-in{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- 登录视图 -->
+<div id="login-view" class="hidden">
+  <div class="login-card">
+    <div class="login-logo">C</div>
+    <h1 id="login-title">Cyaim 权限管理</h1>
+    <div class="sub">请登录以继续</div>
+    <div class="login-tabs">
+      <button type="button" id="tab-pwd" class="active">账号登录</button>
+      <button type="button" id="tab-token">令牌登录</button>
+    </div>
+    <form id="form-pwd">
+      <div class="frow"><label>用户名</label><input class="inp" id="login-user" autocomplete="username"></div>
+      <div class="frow"><label>密码</label><input class="inp" id="login-pass" type="password" autocomplete="current-password"></div>
+      <div class="login-err" id="login-err"></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center" id="btn-login" type="submit">登 录</button>
+    </form>
+    <form id="form-token" class="hidden">
+      <div class="frow"><label>访问令牌（Access Token）</label><textarea class="inp" id="login-token" rows="4" placeholder="粘贴 Bearer 访问令牌"></textarea></div>
+      <div class="login-err" id="login-err2"></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center" type="submit">使用令牌进入</button>
+    </form>
+  </div>
+</div>
+
+<!-- 主应用 -->
+<div id="app-view" class="hidden">
+  <aside id="sidebar">
+    <div class="brand"><div class="brand-logo">C</div><span id="brand-name">Cyaim 权限管理</span></div>
+    <nav id="nav"></nav>
+    <div class="sidebar-foot">
+      <div class="who" id="cur-name"></div>
+      <div class="role muted" id="cur-roles"></div>
+      <button class="btn-logout" id="btn-logout" type="button">退出登录</button>
+    </div>
+  </aside>
+  <div id="main">
+    <header id="topbar"><h1 id="page-title"></h1></header>
+    <div id="content"></div>
+  </div>
+</div>
+
+<div id="modal-root"></div>
+<div id="toasts"></div>
+
+<script>
+'use strict';
+/* ================================================================ 基础 */
+var BASE = location.pathname.replace(/\/index\.html$/, '').replace(/\/+$/, '');
+var TOKEN_KEY = 'cyaim.admin.token';
+var state = {
+  token: sessionStorage.getItem(TOKEN_KEY) || '',
+  config: null,
+  me: null,
+  page: '',
+  users: { search: '', skip: 0, take: 20, total: 0 },
+  audit: { category: '', outcome: '', subjectId: '', from: '', to: '', skip: 0, take: 50, lastCount: 0 }
+};
+
+function $(sel){ return document.querySelector(sel); }
+function el(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function esc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function fmtDate(v){ if (!v) return '-'; var d = new Date(v); return isNaN(d.getTime()) ? String(v) : d.toLocaleString('zh-CN', { hour12: false }); }
+function joinList(a){ return (a && a.length) ? a.join(', ') : '-'; }
+
+function toast(msg, isErr){
+  var t = el('div', 'toast' + (isErr ? ' err' : ''), msg);
+  $('#toasts').appendChild(t);
+  setTimeout(function(){ t.remove(); }, 3800);
+}
+
+async function api(path, method, body){
+  var headers = {};
+  if (state.token) headers['Authorization'] = 'Bearer ' + state.token;
+  var init = { method: method || 'GET', headers: headers };
+  if (body !== undefined) { headers['Content-Type'] = 'application/json'; init.body = JSON.stringify(body); }
+  var res;
+  try { res = await fetch(BASE + path, init); }
+  catch (e) { throw new Error('网络请求失败，请检查连接'); }
+  if (res.status === 401) { onUnauthorized(); throw new Error('未登录或登录已过期'); }
+  if (res.status === 204) return null;
+  var data = null;
+  try { data = await res.json(); } catch (e) { /* 无正文 */ }
+  if (!res.ok) throw new Error((data && (data.error_description || data.error)) || ('请求失败（HTTP ' + res.status + '）'));
+  return data;
+}
+
+function setToken(token){
+  state.token = token || '';
+  if (token) sessionStorage.setItem(TOKEN_KEY, token);
+  else sessionStorage.removeItem(TOKEN_KEY);
+}
+
+function onUnauthorized(){
+  setToken('');
+  state.me = null;
+  showLogin();
+}
+
+/* ================================================================ 模态 / 确认 / 表单控件 */
+function openModal(title, body, buttons, wide){
+  var overlay = el('div', 'modal-overlay');
+  var box = el('div', 'modal' + (wide ? ' modal-lg' : ''));
+  var head = el('div', 'modal-head');
+  head.appendChild(el('span', null, title));
+  var xb = el('button', 'modal-close', '×'); xb.type = 'button';
+  head.appendChild(xb);
+  var bodyEl = el('div', 'modal-body');
+  if (typeof body === 'string') bodyEl.innerHTML = body; else bodyEl.appendChild(body);
+  var foot = el('div', 'modal-foot');
+  function close(){ overlay.remove(); }
+  xb.onclick = close;
+  overlay.addEventListener('mousedown', function(e){ if (e.target === overlay) close(); });
+  (buttons || []).forEach(function(b){
+    var btnEl = el('button', 'btn ' + (b.cls || ''), b.text); btnEl.type = 'button';
+    btnEl.onclick = async function(){
+      if (!b.onClick) { close(); return; }
+      btnEl.disabled = true;
+      try { await b.onClick(close); }
+      catch (err) { toast(err.message || String(err), true); }
+      finally { btnEl.disabled = false; }
+    };
+    foot.appendChild(btnEl);
+  });
+  box.appendChild(head); box.appendChild(bodyEl); box.appendChild(foot);
+  overlay.appendChild(box);
+  $('#modal-root').appendChild(overlay);
+  return close;
+}
+
+function confirmDlg(message, dangerText){
+  return new Promise(function(resolve){
+    var done = false;
+    var close = openModal('确认操作', '<p style="padding-bottom:12px">' + esc(message) + '</p>', [
+      { text: '取消', onClick: function(c){ done = true; c(); resolve(false); } },
+      { text: dangerText || '确定', cls: 'btn-danger', onClick: function(c){ done = true; c(); resolve(true); } }
+    ]);
+    // 点击遮罩关闭视为取消
+    var root = $('#modal-root');
+    var watcher = new MutationObserver(function(){
+      if (!root.contains(document.querySelector('.modal-overlay')) && !done) { resolve(false); watcher.disconnect(); }
+    });
+    watcher.observe(root, { childList: true });
+    void close;
+  });
+}
+
+function inp(value, placeholder, type){
+  var i = el('input', 'inp');
+  i.type = type || 'text';
+  i.value = value == null ? '' : value;
+  if (placeholder) i.placeholder = placeholder;
+  return i;
+}
+
+function chk(checked, label){
+  var wrap = el('label', 'chk');
+  var c = document.createElement('input'); c.type = 'checkbox'; c.checked = !!checked;
+  wrap.appendChild(c);
+  wrap.appendChild(document.createTextNode(label));
+  return { root: wrap, input: c };
+}
+
+function frow(label, control){
+  var d = el('div', 'frow');
+  d.appendChild(el('label', null, label));
+  d.appendChild(control);
+  return d;
+}
+
+function tagInput(values, placeholder){
+  var root = el('div', 'tags');
+  var input = el('input', 'tags-inp');
+  input.placeholder = placeholder || '输入后回车添加';
+  var items = (values || []).slice();
+  function render(){
+    root.querySelectorAll('.tag').forEach(function(t){ t.remove(); });
+    items.forEach(function(v, i){
+      var t = el('span', 'tag', v);
+      var x = el('button', 'tag-x', '×'); x.type = 'button';
+      x.onclick = function(e){ e.stopPropagation(); items.splice(i, 1); render(); };
+      t.appendChild(x);
+      root.insertBefore(t, input);
+    });
+  }
+  function commit(){
+    var v = input.value.trim().replace(/[,，]+$/, '').trim();
+    if (v && items.indexOf(v) < 0) { items.push(v); render(); }
+    input.value = '';
+  }
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); commit(); }
+    else if (e.key === 'Backspace' && !input.value && items.length) { items.pop(); render(); }
+  });
+  input.addEventListener('blur', commit);
+  root.addEventListener('click', function(){ input.focus(); });
+  root.appendChild(input);
+  render();
+  return { root: root, get: function(){ commit(); return items.slice(); } };
+}
+
+function btnCell(defs){
+  var d = el('div', 'actions');
+  defs.forEach(function(b){
+    if (!b) return;
+    var e = el('button', 'btn btn-sm ' + (b.cls || ''), b.text); e.type = 'button';
+    e.onclick = b.onClick;
+    d.appendChild(e);
+  });
+  return d;
+}
+
+function pager(container, info, onPage){
+  container.innerHTML = '';
+  var pages = Math.max(1, Math.ceil(info.total / info.take));
+  var cur = Math.floor(info.skip / info.take) + 1;
+  var prev = el('button', 'btn btn-sm', '上一页'); prev.type = 'button'; prev.disabled = cur <= 1;
+  var next = el('button', 'btn btn-sm', '下一页'); next.type = 'button'; next.disabled = cur >= pages;
+  prev.onclick = function(){ onPage((cur - 2) * info.take); };
+  next.onclick = function(){ onPage(cur * info.take); };
+  container.appendChild(el('span', 'muted', '共 ' + info.total + ' 条，第 ' + cur + ' / ' + pages + ' 页'));
+  container.appendChild(el('span', 'spacer'));
+  container.appendChild(prev);
+  container.appendChild(next);
+}
+
+/* ================================================================ 页面框架 */
+var PAGES = [
+  { id: 'dashboard', title: '仪表盘',   can: function(p){ return p.read || p.manageUsers || p.manageRoles || p.managePermissions || p.manageClients || p.readAudit; }, render: renderDashboard },
+  { id: 'users',     title: '用户管理', can: function(p){ return p.read || p.manageUsers; },       render: renderUsers },
+  { id: 'roles',     title: '角色管理', can: function(p){ return p.read || p.manageRoles; },       render: renderRoles },
+  { id: 'perms',     title: '权限定义', can: function(p){ return p.read || p.managePermissions; }, render: renderPerms },
+  { id: 'clients',   title: '客户端管理', can: function(p){ return p.read || p.manageClients; },   render: renderClients },
+  { id: 'audit',     title: '审计日志', can: function(p){ return p.readAudit; },                   render: renderAudit }
+];
+
+function perms(){ return (state.me && state.me.permissions) || {}; }
+function can(name){ return !!perms()[name]; }
+function content(){ var c = $('#content'); c.innerHTML = ''; return c; }
+
+function buildNav(){
+  var nav = $('#nav'); nav.innerHTML = '';
+  PAGES.forEach(function(p){
+    if (!p.can(perms())) return;
+    var a = el('a', 'nav-item', p.title);
+    a.dataset.page = p.id;
+    a.onclick = function(){ navigate(p.id); };
+    nav.appendChild(a);
+  });
+}
+
+async function navigate(id){
+  var page = null;
+  for (var i = 0; i < PAGES.length; i++) { if (PAGES[i].id === id) { page = PAGES[i]; break; } }
+  if (!page || !page.can(perms())) return;
+  state.page = id;
+  document.querySelectorAll('.nav-item').forEach(function(a){ a.classList.toggle('active', a.dataset.page === id); });
+  $('#page-title').textContent = page.title;
+  try { await page.render(); }
+  catch (err) { toast(err.message || String(err), true); }
+}
+
+function showLogin(){
+  $('#app-view').classList.add('hidden');
+  $('#login-view').classList.remove('hidden');
+}
+
+function enterApp(){
+  $('#login-view').classList.add('hidden');
+  $('#app-view').classList.remove('hidden');
+  var me = state.me || {};
+  $('#cur-name').textContent = me.name || me.id || '未知主体';
+  $('#cur-roles').textContent = (me.roles && me.roles.length) ? me.roles.join(' / ') : '（无角色）';
+  buildNav();
+  var first = null;
+  for (var i = 0; i < PAGES.length; i++) { if (PAGES[i].can(perms())) { first = PAGES[i].id; break; } }
+  if (first) navigate(first);
+  else { content().appendChild(el('div', 'empty', '当前账号没有任何管理面板权限（auth.admin.*）')); $('#page-title').textContent = '无权限'; }
+}
+
+/* ================================================================ 登录 */
+function bindLogin(){
+  $('#tab-pwd').onclick = function(){
+    this.classList.add('active'); $('#tab-token').classList.remove('active');
+    $('#form-pwd').classList.remove('hidden'); $('#form-token').classList.add('hidden');
+  };
+  $('#tab-token').onclick = function(){
+    this.classList.add('active'); $('#tab-pwd').classList.remove('active');
+    $('#form-token').classList.remove('hidden'); $('#form-pwd').classList.add('hidden');
+  };
+  $('#form-pwd').onsubmit = async function(e){
+    e.preventDefault();
+    var err = $('#login-err'); err.textContent = '';
+    var user = $('#login-user').value.trim();
+    var pass = $('#login-pass').value;
+    if (!user || !pass) { err.textContent = '请输入用户名与密码'; return; }
+    var btn = $('#btn-login'); btn.disabled = true;
+    try {
+      var cfg = state.config || {};
+      var params = new URLSearchParams();
+      params.set('grant_type', 'password');
+      params.set('client_id', cfg.clientId || 'cyaim-admin-panel');
+      params.set('username', user);
+      params.set('password', pass);
+      params.set('scope', 'permissions offline_access');
+      var res = await fetch(cfg.tokenEndpoint || '/connect/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString()
+      });
+      var data = null;
+      try { data = await res.json(); } catch (e2) { /* 非 JSON */ }
+      if (!res.ok || !data || !data.access_token) {
+        throw new Error((data && (data.error_description || data.error)) || '登录失败（HTTP ' + res.status + '）');
+      }
+      await loginWithToken(data.access_token);
+    } catch (ex) {
+      err.textContent = ex.message || String(ex);
+    } finally {
+      btn.disabled = false;
+    }
+  };
+  $('#form-token').onsubmit = async function(e){
+    e.preventDefault();
+    var err = $('#login-err2'); err.textContent = '';
+    var token = $('#login-token').value.trim().replace(/^Bearer\s+/i, '');
+    if (!token) { err.textContent = '请粘贴访问令牌'; return; }
+    try { await loginWithToken(token); }
+    catch (ex) { err.textContent = ex.message || String(ex); }
+  };
+  $('#btn-logout').onclick = function(){ setToken(''); state.me = null; showLogin(); };
+}
+
+async function loginWithToken(token){
+  setToken(token);
+  try { state.me = await api('/api/me'); }
+  catch (ex) { setToken(''); throw ex; }
+  $('#login-pass').value = ''; $('#login-token').value = '';
+  enterApp();
+}
+
+/* ================================================================ 仪表盘 */
+async function renderDashboard(){
+  var c = content();
+  var stats = await api('/api/stats');
+  var grid = el('div', 'stat-grid');
+  [['用户', stats.users], ['角色', stats.roles], ['权限定义', stats.permissions], ['客户端', stats.clients]].forEach(function(s){
+    var card = el('div', 'stat');
+    card.appendChild(el('div', 'num', String(s[1])));
+    card.appendChild(el('div', 'lbl', s[0]));
+    grid.appendChild(card);
+  });
+  c.appendChild(grid);
+
+  var card = el('div', 'card');
+  var head = el('div', 'card-pad');
+  head.appendChild(el('strong', null, '最近拒绝事件'));
+  head.appendChild(el('span', 'muted', '（最近 10 条被拒绝的审计记录）'));
+  card.appendChild(head);
+  var wrap = el('div', 'table-wrap');
+  var denied = stats.recentDenied || [];
+  if (!denied.length) {
+    card.appendChild(el('div', 'empty', '暂无拒绝记录'));
+  } else {
+    var tbl = el('table');
+    tbl.innerHTML = '<thead><tr><th>时间</th><th>类别</th><th>主体</th><th>资源</th><th>动作</th><th>详情</th><th>IP</th></tr></thead>';
+    var tb = el('tbody');
+    denied.forEach(function(evt){
+      var tr = el('tr', 'row-denied');
+      tr.appendChild(el('td', null, fmtDate(evt.timestamp)));
+      tr.appendChild(el('td', null, catZh(evt.category)));
+      tr.appendChild(el('td', null, evt.subjectName || evt.subjectId || '-'));
+      tr.appendChild(el('td', 'wrap', evt.resource || '-'));
+      tr.appendChild(el('td', null, evt.action || '-'));
+      tr.appendChild(el('td', 'wrap', evt.detail || '-'));
+      tr.appendChild(el('td', null, evt.remoteIp || '-'));
+      tb.appendChild(tr);
+    });
+    tbl.appendChild(tb);
+    wrap.appendChild(tbl);
+    card.appendChild(wrap);
+  }
+  c.appendChild(card);
+}
+
+/* ================================================================ 用户管理 */
+async function renderUsers(){
+  var c = content();
+  var toolbar = el('div', 'toolbar');
+  var search = inp(state.users.search, '搜索用户名 / 显示名 / 邮箱');
+  var btnSearch = el('button', 'btn', '搜索'); btnSearch.type = 'button';
+  toolbar.appendChild(search); toolbar.appendChild(btnSearch); toolbar.appendChild(el('span', 'spacer'));
+  if (can('manageUsers')) {
+    var btnNew = el('button', 'btn btn-primary', '新建用户'); btnNew.type = 'button';
+    btnNew.onclick = function(){ userModal(null); };
+    toolbar.appendChild(btnNew);
+  }
+  c.appendChild(toolbar);
+
+  var card = el('div', 'card');
+  var wrap = el('div', 'table-wrap');
+  var tbl = el('table');
+  tbl.innerHTML = '<thead><tr><th>用户名</th><th>显示名</th><th>邮箱</th><th>角色</th><th>状态</th><th>创建时间</th><th>操作</th></tr></thead>';
+  var tbody = el('tbody');
+  tbl.appendChild(tbody);
+  wrap.appendChild(tbl);
+  card.appendChild(wrap);
+  var pg = el('div', 'pager');
+  card.appendChild(pg);
+  c.appendChild(card);
+
+  async function load(){
+    var u = state.users;
+    var q = '/api/users?search=' + encodeURIComponent(u.search) + '&skip=' + u.skip + '&take=' + u.take;
+    var data = await api(q);
+    u.total = data.total;
+    tbody.innerHTML = '';
+    if (!data.items.length) {
+      var tr0 = el('tr'); var td0 = el('td', 'empty', '暂无用户'); td0.colSpan = 7; tr0.appendChild(td0); tbody.appendChild(tr0);
+    }
+    data.items.forEach(function(user){
+      var tr = el('tr');
+      tr.appendChild(el('td', null, user.userName));
+      tr.appendChild(el('td', null, user.displayName || '-'));
+      tr.appendChild(el('td', null, user.email || '-'));
+      tr.appendChild(el('td', 'wrap', joinList(user.roles)));
+      var st = el('td');
+      st.appendChild(el('span', 'badge ' + (user.isEnabled ? 'badge-ok' : 'badge-off'), user.isEnabled ? '启用' : '禁用'));
+      if (user.lockoutEnd && new Date(user.lockoutEnd) > new Date()) {
+        st.appendChild(document.createTextNode(' '));
+        st.appendChild(el('span', 'badge badge-danger', '锁定'));
+      }
+      tr.appendChild(st);
+      tr.appendChild(el('td', null, fmtDate(user.createdAt)));
+      var manage = can('manageUsers');
+      tr.appendChild(el('td')).appendChild(btnCell([
+        manage && { text: '编辑', onClick: function(){ userModal(user); } },
+        manage && { text: '重置密码', onClick: function(){ resetPasswordModal(user); } },
+        manage && { text: user.isEnabled ? '停用' : '启用', onClick: async function(){
+          try {
+            await api('/api/users/' + encodeURIComponent(user.id), 'PUT', { isEnabled: !user.isEnabled });
+            toast((user.isEnabled ? '已停用：' : '已启用：') + user.userName);
+            load();
+          } catch (ex) { toast(ex.message, true); }
+        } },
+        manage && { text: '删除', cls: 'btn-danger', onClick: async function(){
+          if (!(await confirmDlg('确定删除用户「' + user.userName + '」？此操作不可恢复。', '删除'))) return;
+          try { await api('/api/users/' + encodeURIComponent(user.id), 'DELETE'); toast('已删除用户：' + user.userName); load(); }
+          catch (ex) { toast(ex.message, true); }
+        } }
+      ]));
+      tbody.appendChild(tr);
+    });
+    pager(pg, state.users, function(skip){ state.users.skip = skip; load(); });
+  }
+
+  function doSearch(){ state.users.search = search.value.trim(); state.users.skip = 0; load(); }
+  btnSearch.onclick = doSearch;
+  search.addEventListener('keydown', function(e){ if (e.key === 'Enter') doSearch(); });
+
+  function userModal(user){
+    var isNew = !user;
+    var uName = inp(user ? user.userName : '', '登录名'); if (!isNew) uName.disabled = true;
+    var uPass = inp('', '初始密码', 'password');
+    var uDisp = inp(user ? user.displayName : '', '显示名');
+    var uMail = inp(user ? user.email : '', 'name@example.com');
+    var uEnabled = chk(user ? user.isEnabled : true, '启用该账号');
+    var tRoles = tagInput(user ? user.roles : [], '角色名，回车添加');
+    var tDirect = tagInput(user ? user.directPermissions : [], '权限代码，如 sys.user.read');
+    var tDenied = tagInput(user ? user.deniedPermissions : [], '拒绝的权限代码');
+
+    var body = el('div');
+    var g = el('div', 'grid2');
+    g.appendChild(frow('用户名' + (isNew ? '（必填）' : ''), uName));
+    if (isNew) g.appendChild(frow('初始密码（必填）', uPass));
+    g.appendChild(frow('显示名', uDisp));
+    g.appendChild(frow('邮箱', uMail));
+    body.appendChild(g);
+    body.appendChild(frow('角色', tRoles.root));
+    body.appendChild(frow('直接权限', tDirect.root));
+    body.appendChild(frow('拒绝权限（优先于任何允许）', tDenied.root));
+    if (!isNew) { var line = el('div', 'frow-inline'); line.appendChild(uEnabled.root); body.appendChild(line); }
+
+    openModal(isNew ? '新建用户' : '编辑用户：' + user.userName, body, [
+      { text: '取消' },
+      { text: '保存', cls: 'btn-primary', onClick: async function(close){
+        if (isNew) {
+          if (!uName.value.trim() || !uPass.value) throw new Error('用户名与初始密码为必填项');
+          await api('/api/users', 'POST', {
+            userName: uName.value.trim(), password: uPass.value,
+            displayName: uDisp.value.trim() || null, email: uMail.value.trim() || null,
+            roles: tRoles.get(), directPermissions: tDirect.get(), deniedPermissions: tDenied.get()
+          });
+          toast('已创建用户：' + uName.value.trim());
+        } else {
+          await api('/api/users/' + encodeURIComponent(user.id), 'PUT', {
+            displayName: uDisp.value.trim(), email: uMail.value.trim(),
+            roles: tRoles.get(), directPermissions: tDirect.get(), deniedPermissions: tDenied.get(),
+            isEnabled: uEnabled.input.checked
+          });
+          toast('已保存用户：' + user.userName);
+        }
+        close(); load();
+      } }
+    ], true);
+  }
+
+  function resetPasswordModal(user){
+    var p1 = inp('', '新密码', 'password');
+    var p2 = inp('', '再次输入新密码', 'password');
+    var body = el('div');
+    body.appendChild(frow('新密码', p1));
+    body.appendChild(frow('确认新密码', p2));
+    body.appendChild(el('p', 'muted', '重置后该用户的已签发令牌将全部失效。'));
+    openModal('重置密码：' + user.userName, body, [
+      { text: '取消' },
+      { text: '重置', cls: 'btn-danger', onClick: async function(close){
+        if (!p1.value) throw new Error('请输入新密码');
+        if (p1.value !== p2.value) throw new Error('两次输入的密码不一致');
+        await api('/api/users/' + encodeURIComponent(user.id) + '/reset-password', 'POST', { newPassword: p1.value });
+        toast('已重置密码：' + user.userName);
+        close();
+      } }
+    ]);
+  }
+
+  await load();
+}
+
+/* ================================================================ 角色管理 */
+async function renderRoles(){
+  var c = content();
+  var toolbar = el('div', 'toolbar');
+  toolbar.appendChild(el('span', 'spacer'));
+  if (can('manageRoles')) {
+    var btnNew = el('button', 'btn btn-primary', '新建角色'); btnNew.type = 'button';
+    btnNew.onclick = function(){ roleModal(null); };
+    toolbar.appendChild(btnNew);
+  }
+  c.appendChild(toolbar);
+
+  var card = el('div', 'card');
+  var wrap = el('div', 'table-wrap');
+  var tbl = el('table');
+  tbl.innerHTML = '<thead><tr><th>角色名</th><th>显示名</th><th>父角色</th><th>允许权限</th><th>拒绝权限</th><th>类型</th><th>操作</th></tr></thead>';
+  var tbody = el('tbody');
+  tbl.appendChild(tbody); wrap.appendChild(tbl); card.appendChild(wrap); c.appendChild(card);
+
+  async function load(){
+    var roles = await api('/api/roles');
+    tbody.innerHTML = '';
+    if (!roles.length) {
+      var tr0 = el('tr'); var td0 = el('td', 'empty', '暂无角色'); td0.colSpan = 7; tr0.appendChild(td0); tbody.appendChild(tr0);
+    }
+    roles.forEach(function(role){
+      var tr = el('tr');
+      tr.appendChild(el('td', null, role.name));
+      tr.appendChild(el('td', null, role.displayName || '-'));
+      tr.appendChild(el('td', 'wrap', joinList(role.parentRoles)));
+      tr.appendChild(el('td', 'wrap', joinList(role.permissions)));
+      tr.appendChild(el('td', 'wrap', joinList(role.deniedPermissions)));
+      var tdSys = el('td');
+      tdSys.appendChild(el('span', 'badge' + (role.isSystem ? ' badge-danger' : ''), role.isSystem ? '系统内置' : '普通'));
+      tr.appendChild(tdSys);
+      var manage = can('manageRoles');
+      tr.appendChild(el('td')).appendChild(btnCell([
+        manage && { text: '编辑', onClick: function(){ roleModal(role); } },
+        manage && !role.isSystem && { text: '删除', cls: 'btn-danger', onClick: async function(){
+          if (!(await confirmDlg('确定删除角色「' + role.name + '」？', '删除'))) return;
+          try { await api('/api/roles/' + encodeURIComponent(role.id), 'DELETE'); toast('已删除角色：' + role.name); load(); }
+          catch (ex) { toast(ex.message, true); }
+        } }
+      ]));
+      tbody.appendChild(tr);
+    });
+  }
+
+  function roleModal(role){
+    var isNew = !role;
+    var rName = inp(role ? role.name : '', '角色名（唯一）');
+    var rDisp = inp(role ? role.displayName : '', '显示名');
+    var rDesc = inp(role ? role.description : '', '描述');
+    var rSystem = chk(role ? role.isSystem : false, '系统内置角色（不可删除）');
+    var tParents = tagInput(role ? role.parentRoles : [], '父角色名（继承其权限）');
+    var tPerms = tagInput(role ? role.permissions : [], '权限代码，支持通配符 * / **');
+    var tDenied = tagInput(role ? role.deniedPermissions : [], '拒绝的权限代码');
+
+    var body = el('div');
+    var g = el('div', 'grid2');
+    g.appendChild(frow('角色名（必填）', rName));
+    g.appendChild(frow('显示名', rDisp));
+    body.appendChild(g);
+    body.appendChild(frow('描述', rDesc));
+    body.appendChild(frow('父角色', tParents.root));
+    body.appendChild(frow('允许权限', tPerms.root));
+    body.appendChild(frow('拒绝权限（优先于任何允许）', tDenied.root));
+    var line = el('div', 'frow-inline'); line.appendChild(rSystem.root); body.appendChild(line);
+
+    openModal(isNew ? '新建角色' : '编辑角色：' + role.name, body, [
+      { text: '取消' },
+      { text: '保存', cls: 'btn-primary', onClick: async function(close){
+        if (!rName.value.trim()) throw new Error('角色名为必填项');
+        var payload = {
+          name: rName.value.trim(), displayName: rDisp.value.trim(), description: rDesc.value.trim(),
+          parentRoles: tParents.get(), permissions: tPerms.get(), deniedPermissions: tDenied.get(),
+          isSystem: rSystem.input.checked
+        };
+        if (isNew) { await api('/api/roles', 'POST', payload); toast('已创建角色：' + payload.name); }
+        else { await api('/api/roles/' + encodeURIComponent(role.id), 'PUT', payload); toast('已保存角色：' + payload.name); }
+        close(); load();
+      } }
+    ], true);
+  }
+
+  await load();
+}
+
+/* ================================================================ 权限定义 */
+async function renderPerms(){
+  var c = content();
+  var toolbar = el('div', 'toolbar');
+  toolbar.appendChild(el('span', 'muted', '权限代码支持层级（"."分隔）与通配符（* / **）'));
+  toolbar.appendChild(el('span', 'spacer'));
+  if (can('managePermissions')) {
+    var btnNew = el('button', 'btn btn-primary', '批量添加'); btnNew.type = 'button';
+    btnNew.onclick = batchModal;
+    toolbar.appendChild(btnNew);
+  }
+  c.appendChild(toolbar);
+
+  var card = el('div', 'card');
+  var wrap = el('div', 'table-wrap');
+  var tbl = el('table');
+  tbl.innerHTML = '<thead><tr><th>权限代码</th><th>显示名</th><th>描述</th><th>来源</th><th>操作</th></tr></thead>';
+  var tbody = el('tbody');
+  tbl.appendChild(tbody); wrap.appendChild(tbl); card.appendChild(wrap); c.appendChild(card);
+
+  var originZh = { Manual: '手工创建', EndpointDiscovery: '端点扫描', System: '系统内置' };
+
+  async function load(){
+    var defs = await api('/api/permissions');
+    tbody.innerHTML = '';
+    if (!defs.length) {
+      var tr0 = el('tr'); var td0 = el('td', 'empty', '暂无权限定义'); td0.colSpan = 5; tr0.appendChild(td0); tbody.appendChild(tr0);
+      return;
+    }
+    var groups = {};
+    defs.forEach(function(d){ var g = d.group || '（未分组）'; (groups[g] = groups[g] || []).push(d); });
+    Object.keys(groups).sort().forEach(function(g){
+      var trg = el('tr', 'group-head');
+      var tdg = el('td', null, g + '（' + groups[g].length + '）'); tdg.colSpan = 5;
+      trg.appendChild(tdg); tbody.appendChild(trg);
+      groups[g].sort(function(a, b){ return a.code < b.code ? -1 : 1; }).forEach(function(d){
+        var tr = el('tr');
+        tr.appendChild(el('td', 'wrap', d.code));
+        tr.appendChild(el('td', null, d.displayName || '-'));
+        tr.appendChild(el('td', 'wrap', d.description || '-'));
+        tr.appendChild(el('td', null, originZh[d.origin] || String(d.origin)));
+        tr.appendChild(el('td')).appendChild(btnCell([
+          can('managePermissions') && { text: '删除', cls: 'btn-danger', onClick: async function(){
+            if (!(await confirmDlg('确定删除权限定义「' + d.code + '」？（不影响已授予该代码的主体）', '删除'))) return;
+            try { await api('/api/permissions/' + encodeURIComponent(d.code), 'DELETE'); toast('已删除：' + d.code); load(); }
+            catch (ex) { toast(ex.message, true); }
+          } }
+        ]));
+        tbody.appendChild(tr);
+      });
+    });
+  }
+
+  function batchModal(){
+    var ta = el('textarea', 'inp');
+    ta.rows = 8;
+    ta.placeholder = 'sys.user.read | 查看用户 | 查看用户列表与详情 | 用户模块\nsys.user.write | 编辑用户 | | 用户模块\nsys.order.**';
+    var body = el('div');
+    body.appendChild(frow('每行一条：权限代码 | 显示名 | 描述 | 分组（后三项可省略）', ta));
+    openModal('批量添加权限定义', body, [
+      { text: '取消' },
+      { text: '添加', cls: 'btn-primary', onClick: async function(close){
+        var items = [];
+        ta.value.split('\n').forEach(function(line){
+          line = line.trim();
+          if (!line) return;
+          var parts = line.split('|').map(function(s){ return s.trim(); });
+          items.push({ code: parts[0], displayName: parts[1] || null, description: parts[2] || null, group: parts[3] || null });
+        });
+        if (!items.length) throw new Error('请至少输入一行权限代码');
+        await api('/api/permissions', 'POST', items);
+        toast('已登记 ' + items.length + ' 条权限定义');
+        close(); load();
+      } }
+    ], true);
+  }
+
+  await load();
+}
+
+/* ================================================================ 客户端管理 */
+async function renderClients(){
+  var c = content();
+  var toolbar = el('div', 'toolbar');
+  toolbar.appendChild(el('span', 'spacer'));
+  if (can('manageClients')) {
+    var btnNew = el('button', 'btn btn-primary', '新建客户端'); btnNew.type = 'button';
+    btnNew.onclick = function(){ clientModal(null); };
+    toolbar.appendChild(btnNew);
+  }
+  c.appendChild(toolbar);
+
+  var card = el('div', 'card');
+  var wrap = el('div', 'table-wrap');
+  var tbl = el('table');
+  tbl.innerHTML = '<thead><tr><th>客户端Id</th><th>名称</th><th>授权类型</th><th>作用域</th><th>密钥</th><th>状态</th><th>操作</th></tr></thead>';
+  var tbody = el('tbody');
+  tbl.appendChild(tbody); wrap.appendChild(tbl); card.appendChild(wrap); c.appendChild(card);
+
+  async function load(){
+    var clients = await api('/api/clients');
+    tbody.innerHTML = '';
+    if (!clients.length) {
+      var tr0 = el('tr'); var td0 = el('td', 'empty', '暂无客户端'); td0.colSpan = 7; tr0.appendChild(td0); tbody.appendChild(tr0);
+    }
+    clients.forEach(function(client){
+      var tr = el('tr');
+      tr.appendChild(el('td', null, client.clientId));
+      tr.appendChild(el('td', null, client.clientName || '-'));
+      tr.appendChild(el('td', 'wrap', joinList(client.allowedGrantTypes)));
+      tr.appendChild(el('td', 'wrap', joinList(client.allowedScopes)));
+      var tdSecret = el('td');
+      tdSecret.appendChild(el('span', 'badge ' + (client.hasSecret ? 'badge-ok' : 'badge-off'), client.hasSecret ? '已设置' : '未设置'));
+      tr.appendChild(tdSecret);
+      var tdSt = el('td');
+      tdSt.appendChild(el('span', 'badge ' + (client.enabled ? 'badge-ok' : 'badge-off'), client.enabled ? '启用' : '禁用'));
+      tr.appendChild(tdSt);
+      var manage = can('manageClients');
+      tr.appendChild(el('td')).appendChild(btnCell([
+        manage && { text: '编辑', onClick: function(){ clientModal(client); } },
+        manage && { text: '重新生成密钥', onClick: async function(){
+          if (!(await confirmDlg('重新生成「' + client.clientId + '」的密钥？旧密钥将立即失效。', '重新生成'))) return;
+          try {
+            var r = await api('/api/clients/' + encodeURIComponent(client.clientId) + '/regenerate-secret', 'POST');
+            secretModal(client.clientId, r.secret);
+            load();
+          } catch (ex) { toast(ex.message, true); }
+        } },
+        manage && { text: '删除', cls: 'btn-danger', onClick: async function(){
+          if (!(await confirmDlg('确定删除客户端「' + client.clientId + '」？', '删除'))) return;
+          try { await api('/api/clients/' + encodeURIComponent(client.clientId), 'DELETE'); toast('已删除客户端：' + client.clientId); load(); }
+          catch (ex) { toast(ex.message, true); }
+        } }
+      ]));
+      tbody.appendChild(tr);
+    });
+  }
+
+  var GRANTS = [
+    ['authorization_code', '授权码'],
+    ['client_credentials', '客户端凭据'],
+    ['password', '密码模式'],
+    ['refresh_token', '刷新令牌']
+  ];
+
+  function clientModal(client){
+    var isNew = !client;
+    var cId = inp(client ? client.clientId : '', '客户端唯一标识'); if (!isNew) cId.disabled = true;
+    var cName = inp(client ? client.clientName : '', '展示名称');
+    var cSecret = inp('', isNew ? '客户端密钥（留空则为公共客户端）' : '新密钥（留空保持不变）', 'password');
+    var cClear = chk(false, '清除现有密钥（改为公共客户端）');
+    var grantChecks = GRANTS.map(function(g){
+      return { value: g[0], chk: chk(client ? client.allowedGrantTypes.indexOf(g[0]) >= 0 : false, g[1] + '（' + g[0] + '）') };
+    });
+    var tRedirect = tagInput(client ? client.redirectUris : [], 'https://app.example.com/callback');
+    var tPostLogout = tagInput(client ? client.postLogoutRedirectUris : [], '登出后跳转地址');
+    var tScopes = tagInput(client ? client.allowedScopes : [], 'openid / profile / permissions ...');
+    var tPerms = tagInput(client ? client.permissions : [], '客户端凭据模式授予的权限代码');
+    var tCors = tagInput(client ? client.allowedCorsOrigins : [], 'https://app.example.com');
+    var cPkce = chk(client ? client.requirePkce : true, '强制 PKCE');
+    var cOffline = chk(client ? client.allowOfflineAccess : false, '允许离线访问（刷新令牌）');
+    var cEnabled = chk(client ? client.enabled : true, '启用');
+    var nAccess = inp(client ? client.accessTokenLifetimeSeconds : 3600, '', 'number');
+    var nRefresh = inp(client ? client.refreshTokenLifetimeSeconds : 1209600, '', 'number');
+    var nCode = inp(client ? client.authorizationCodeLifetimeSeconds : 300, '', 'number');
+
+    var body = el('div');
+    var g1 = el('div', 'grid2');
+    g1.appendChild(frow('客户端Id' + (isNew ? '（必填）' : ''), cId));
+    g1.appendChild(frow('名称', cName));
+    body.appendChild(g1);
+    body.appendChild(frow(isNew ? '密钥' : '密钥（null=不变 / 输入=更新）', cSecret));
+    if (!isNew && client.hasSecret) { var lc = el('div', 'frow-inline'); lc.appendChild(cClear.root); body.appendChild(lc); }
+    var grantRow = el('div', 'frow');
+    grantRow.appendChild(el('label', null, '允许的授权类型'));
+    var grantWrap = el('div', 'frow-inline');
+    grantChecks.forEach(function(gc){ grantWrap.appendChild(gc.chk.root); });
+    grantRow.appendChild(grantWrap);
+    body.appendChild(grantRow);
+    body.appendChild(frow('回调地址（授权码模式）', tRedirect.root));
+    body.appendChild(frow('登出后跳转地址', tPostLogout.root));
+    body.appendChild(frow('允许的作用域', tScopes.root));
+    body.appendChild(frow('客户端权限', tPerms.root));
+    body.appendChild(frow('允许的 CORS 来源', tCors.root));
+    var g2 = el('div', 'grid2');
+    g2.appendChild(frow('访问令牌有效期（秒）', nAccess));
+    g2.appendChild(frow('刷新令牌有效期（秒）', nRefresh));
+    g2.appendChild(frow('授权码有效期（秒）', nCode));
+    body.appendChild(g2);
+    var flags = el('div', 'frow-inline');
+    flags.appendChild(cPkce.root); flags.appendChild(cOffline.root); flags.appendChild(cEnabled.root);
+    body.appendChild(flags);
+
+    openModal(isNew ? '新建客户端' : '编辑客户端：' + client.clientId, body, [
+      { text: '取消' },
+      { text: '保存', cls: 'btn-primary', onClick: async function(close){
+        if (isNew && !cId.value.trim()) throw new Error('客户端Id为必填项');
+        var secret;
+        if (isNew) secret = cSecret.value || null;
+        else if (cClear.input.checked) secret = '';
+        else secret = cSecret.value ? cSecret.value : null;
+        var payload = {
+          clientId: cId.value.trim(),
+          clientName: cName.value.trim(),
+          secret: secret,
+          allowedGrantTypes: grantChecks.filter(function(gc){ return gc.chk.input.checked; }).map(function(gc){ return gc.value; }),
+          redirectUris: tRedirect.get(),
+          postLogoutRedirectUris: tPostLogout.get(),
+          allowedScopes: tScopes.get(),
+          permissions: tPerms.get(),
+          allowedCorsOrigins: tCors.get(),
+          requirePkce: cPkce.input.checked,
+          allowOfflineAccess: cOffline.input.checked,
+          enabled: cEnabled.input.checked,
+          accessTokenLifetimeSeconds: parseInt(nAccess.value, 10) || 3600,
+          refreshTokenLifetimeSeconds: parseInt(nRefresh.value, 10) || 1209600,
+          authorizationCodeLifetimeSeconds: parseInt(nCode.value, 10) || 300
+        };
+        if (isNew) { await api('/api/clients', 'POST', payload); toast('已创建客户端：' + payload.clientId); }
+        else { await api('/api/clients/' + encodeURIComponent(client.clientId), 'PUT', payload); toast('已保存客户端：' + client.clientId); }
+        close(); load();
+      } }
+    ], true);
+  }
+
+  function secretModal(clientId, secret){
+    var body = el('div');
+    body.appendChild(el('p', null, '客户端「' + clientId + '」的新密钥如下，仅本次显示，请立即妥善保存：'));
+    var box = el('div', 'secret-box', secret);
+    body.appendChild(box);
+    var copy = el('button', 'btn btn-sm', '复制到剪贴板'); copy.type = 'button';
+    copy.onclick = function(){
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(secret).then(function(){ toast('已复制'); }, function(){ toast('复制失败，请手动复制', true); });
+      } else { toast('当前环境不支持自动复制，请手动复制', true); }
+    };
+    body.appendChild(copy);
+    body.appendChild(el('p', 'muted', '关闭此窗口后将无法再次查看该密钥明文。'));
+    openModal('客户端密钥（仅显示一次）', body, [{ text: '我已保存，关闭' }]);
+  }
+
+  await load();
+}
+
+/* ================================================================ 审计日志 */
+var CAT_ZH = { Login: '登录', Logout: '登出', TokenIssued: '令牌签发', TokenRevoked: '令牌吊销', PermissionCheck: '权限判断', Admin: '管理操作', Security: '安全事件' };
+var OUT_ZH = { Success: '成功', Denied: '拒绝', Failure: '失败' };
+function catZh(v){ return CAT_ZH[v] || String(v); }
+function outZh(v){ return OUT_ZH[v] || String(v); }
+
+async function renderAudit(){
+  var c = content();
+  var a = state.audit;
+
+  var toolbar = el('div', 'toolbar');
+  var selCat = el('select', 'inp');
+  selCat.innerHTML = '<option value="">全部类别</option>' + Object.keys(CAT_ZH).map(function(k){
+    return '<option value="' + k + '">' + CAT_ZH[k] + '</option>';
+  }).join('');
+  selCat.value = a.category;
+  var selOut = el('select', 'inp');
+  selOut.innerHTML = '<option value="">全部结果</option>' + Object.keys(OUT_ZH).map(function(k){
+    return '<option value="' + k + '">' + OUT_ZH[k] + '</option>';
+  }).join('');
+  selOut.value = a.outcome;
+  var inSubject = inp(a.subjectId, '主体Id');
+  inSubject.style.minWidth = '140px';
+  var inFrom = inp(a.from, '', 'datetime-local');
+  var inTo = inp(a.to, '', 'datetime-local');
+  var btnQuery = el('button', 'btn btn-primary', '查询'); btnQuery.type = 'button';
+  [selCat, selOut, inSubject, inFrom, inTo].forEach(function(x){ x.style.width = 'auto'; toolbar.appendChild(x); });
+  toolbar.appendChild(btnQuery);
+  c.appendChild(toolbar);
+
+  var card = el('div', 'card');
+  var wrap = el('div', 'table-wrap');
+  var tbl = el('table');
+  tbl.innerHTML = '<thead><tr><th>时间</th><th>类别</th><th>结果</th><th>主体</th><th>客户端</th><th>资源</th><th>动作</th><th>详情</th><th>IP</th></tr></thead>';
+  var tbody = el('tbody');
+  tbl.appendChild(tbody); wrap.appendChild(tbl); card.appendChild(wrap);
+  var pg = el('div', 'pager');
+  card.appendChild(pg);
+  c.appendChild(card);
+
+  async function load(){
+    var q = '/api/audit?skip=' + a.skip + '&take=' + a.take;
+    if (a.category) q += '&category=' + encodeURIComponent(a.category);
+    if (a.outcome) q += '&outcome=' + encodeURIComponent(a.outcome);
+    if (a.subjectId) q += '&subjectId=' + encodeURIComponent(a.subjectId);
+    if (a.from) q += '&from=' + encodeURIComponent(new Date(a.from).toISOString());
+    if (a.to) q += '&to=' + encodeURIComponent(new Date(a.to).toISOString());
+    var data = await api(q);
+    var items = data.items || [];
+    a.lastCount = items.length;
+    tbody.innerHTML = '';
+    if (!items.length) {
+      var tr0 = el('tr'); var td0 = el('td', 'empty', '没有符合条件的审计记录'); td0.colSpan = 9; tr0.appendChild(td0); tbody.appendChild(tr0);
+    }
+    items.forEach(function(evt){
+      var tr = el('tr', evt.outcome === 'Denied' ? 'row-denied' : null);
+      tr.appendChild(el('td', null, fmtDate(evt.timestamp)));
+      tr.appendChild(el('td', null, catZh(evt.category)));
+      var tdOut = el('td');
+      var cls = evt.outcome === 'Success' ? 'badge-ok' : (evt.outcome === 'Denied' ? 'badge-danger' : 'badge-off');
+      tdOut.appendChild(el('span', 'badge ' + cls, outZh(evt.outcome)));
+      tr.appendChild(tdOut);
+      tr.appendChild(el('td', 'wrap', evt.subjectName || evt.subjectId || '-'));
+      tr.appendChild(el('td', null, evt.clientId || '-'));
+      tr.appendChild(el('td', 'wrap', evt.resource || '-'));
+      tr.appendChild(el('td', null, evt.action || '-'));
+      tr.appendChild(el('td', 'wrap', evt.detail || '-'));
+      tr.appendChild(el('td', null, evt.remoteIp || '-'));
+      tbody.appendChild(tr);
+    });
+
+    pg.innerHTML = '';
+    var cur = Math.floor(a.skip / a.take) + 1;
+    var prev = el('button', 'btn btn-sm', '上一页'); prev.type = 'button'; prev.disabled = a.skip <= 0;
+    var next = el('button', 'btn btn-sm', '下一页'); next.type = 'button'; next.disabled = items.length < a.take;
+    prev.onclick = function(){ a.skip = Math.max(0, a.skip - a.take); load(); };
+    next.onclick = function(){ a.skip += a.take; load(); };
+    pg.appendChild(el('span', 'muted', '第 ' + cur + ' 页 · 本页 ' + items.length + ' 条'));
+    pg.appendChild(el('span', 'spacer'));
+    pg.appendChild(prev); pg.appendChild(next);
+  }
+
+  btnQuery.onclick = function(){
+    a.category = selCat.value; a.outcome = selOut.value; a.subjectId = inSubject.value.trim();
+    a.from = inFrom.value; a.to = inTo.value; a.skip = 0;
+    load();
+  };
+
+  await load();
+}
+
+/* ================================================================ 启动 */
+(async function init(){
+  bindLogin();
+  try {
+    var res = await fetch(BASE + '/api/config');
+    if (res.ok) state.config = await res.json();
+  } catch (e) { /* 使用默认配置 */ }
+  state.config = state.config || { tokenEndpoint: '/connect/token', clientId: 'cyaim-admin-panel', serverName: null };
+  var name = state.config.serverName || 'Cyaim 权限管理';
+  $('#login-title').textContent = name;
+  $('#brand-name').textContent = name;
+  document.title = name;
+
+  if (state.token) {
+    try {
+      state.me = await api('/api/me');
+      enterApp();
+      return;
+    } catch (e) { setToken(''); }
+  }
+  showLogin();
+})();
+</script>
+</body>
+</html>
