@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <Description>Entity Framework Core storage for Cyaim.Authentication: implements all store interfaces (users, roles, clients, permission definitions, tokens) plus a database-backed cluster version store, enabling multi-instance production deployment over a shared database (PostgreSQL / SQL Server / SQLite / …). Provider-agnostic.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cyaim.Authentication.Abstractions\Cyaim.Authentication.Abstractions.csproj" />
+    <ProjectReference Include="..\Cyaim.Authentication.Core\Cyaim.Authentication.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.4" />
+  </ItemGroup>
+
+</Project>
