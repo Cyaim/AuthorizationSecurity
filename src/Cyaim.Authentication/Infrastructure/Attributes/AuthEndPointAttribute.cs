@@ -1,3 +1,4 @@
+#nullable disable
 ﻿using Microsoft.AspNetCore.Mvc.Routing;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ namespace Cyaim.Authentication.Infrastructure.Attributes
     /// <summary>
     /// 授权节点特性
     /// </summary>
+    [Obsolete("1.x 遗留 API。请改用 Cyaim.Authentication.Abstractions.RequirePermissionAttribute 与 AddCyaimAuthentication/UseCyaimAuthentication。")]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class AuthEndPointAttribute : Attribute, IAuthEndPointAttribute
     {

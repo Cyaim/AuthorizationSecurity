@@ -1,3 +1,4 @@
+#nullable disable
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services"></param>
         /// <param name="setupAction"></param>
+        [Obsolete("1.x 遗留 API。请改用 services.AddCyaimAuthentication(...)。")]
         public static void ConfigureAuth(this IServiceCollection services, Action<AuthOptions> setupAction)
         {
             if (services == null)

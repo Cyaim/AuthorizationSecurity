@@ -1,3 +1,4 @@
+#nullable disable
 ﻿using Cyaim.Authentication.Infrastructure.Attributes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
