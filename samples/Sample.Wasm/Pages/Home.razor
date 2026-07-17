@@ -1,0 +1,141 @@
+@page "/"
+@inject CyaimAuthClient Auth
+@inject CyaimAuthClientOptions AuthOptions
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+@inject HttpClient Http
+
+<PageTitle>Cyaim 授权示例（WASM）</PageTitle>
+
+<h1>Cyaim.Authentication — Blazor WebAssembly 示例</h1>
+<p>演示 Client SDK 在浏览器中的授权码 + PKCE 统一登录。</p>
+
+@if (!Auth.IsLoggedIn)
+{
+    <button @onclick="LoginAsync">登录</button>
+}
+else
+{
+    <h2>用户信息</h2>
+    @if (_userInfo != null)
+    {
+        <ul>
+            <li>标识（sub）：@_userInfo.Sub</li>
+            <li>显示名：@_userInfo.Name</li>
+            <li>用户名：@_userInfo.PreferredUsername</li>
+            <li>角色：@string.Join("、", _userInfo.Role ?? Array.Empty<string>())</li>
+        </ul>
+    }
+    else
+    {
+        <p>正在加载用户信息…</p>
+    }
+
+    <h2>已授予权限</h2>
+    @if (Auth.GrantedPermissions is { Count: > 0 })
+    {
+        <ul>
+            @foreach (var p in Auth.GrantedPermissions)
+            {
+                <li><code>@p</code></li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>（无权限或尚未加载）</p>
+    }
+
+    <h2>调用资源 API</h2>
+    <button disabled="@(!Auth.HasPermission("demo.order.read"))" @onclick="ReadOrdersAsync">读取订单</button>
+    @if (!Auth.HasPermission("demo.order.read"))
+    {
+        <span>（缺少权限 demo.order.read，按钮已禁用）</span>
+    }
+    @if (_orders != null)
+    {
+        <pre>@_orders</pre>
+    }
+
+    <h2>注销</h2>
+    <button @onclick="LogoutAsync">注销</button>
+}
+
+@if (_error != null)
+{
+    <p style="color: red;">@_error</p>
+}
+
+@code {
+    private UserInfoResponse? _userInfo;
+    private string? _orders;
+    private string? _error;
+
+    /// <summary>资源 API 地址（Sample.WebApi）</summary>
+    private const string OrdersApi = "http://127.0.0.1:5298/api/orders";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Auth.IsLoggedIn)
+        {
+            return;
+        }
+
+        try
+        {
+            _userInfo = await Auth.GetUserInfoAsync();
+            if (Auth.GrantedPermissions == null)
+            {
+                await Auth.LoadPermissionsAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = "加载用户信息失败：" + ex.Message;
+        }
+    }
+
+    /// <summary>发起授权码 + PKCE 登录：生成 verifier/state 存入 sessionStorage，跳转授权端点。</summary>
+    private async Task LoginAsync()
+    {
+        string verifier = Pkce.CreateCodeVerifier();
+        string state = Guid.NewGuid().ToString("N");
+        await JS.InvokeVoidAsync("sessionStorage.setItem", "pkce_verifier", verifier);
+        await JS.InvokeVoidAsync("sessionStorage.setItem", "pkce_state", state);
+
+        string origin = new Uri(Nav.BaseUri).GetLeftPart(UriPartial.Authority);
+        string url = Pkce.BuildAuthorizeUrl(
+            AuthOptions.Authority,
+            AuthOptions.ClientId,
+            origin + "/callback",
+            AuthOptions.Scopes,
+            state,
+            Pkce.CreateCodeChallenge(verifier));
+
+        Nav.NavigateTo(url, forceLoad: true);
+    }
+
+    /// <summary>调用资源 API（CyaimAuthHttpMessageHandler 自动附加 Bearer 令牌）。</summary>
+    private async Task ReadOrdersAsync()
+    {
+        _error = null;
+        try
+        {
+            _orders = await Http.GetStringAsync(OrdersApi);
+        }
+        catch (Exception ex)
+        {
+            _error = "调用资源 API 失败（若为跨域请求被浏览器拦截，请参见 README 的 CORS 说明）：" + ex.Message;
+        }
+    }
+
+    /// <summary>注销：吊销并清除本地令牌，再跳转授权服务器结束 SSO 会话。</summary>
+    private async Task LogoutAsync()
+    {
+        await Auth.LogoutAsync();
+        string origin = new Uri(Nav.BaseUri).GetLeftPart(UriPartial.Authority);
+        Nav.NavigateTo(
+            AuthOptions.Authority.TrimEnd('/') + "/account/logout?post_logout_redirect_uri=" + Uri.EscapeDataString(origin + "/"),
+            forceLoad: true);
+    }
+}

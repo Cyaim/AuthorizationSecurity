@@ -1,0 +1,19 @@
+<Application x:Class="Sample.Wpf.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 启动逻辑在 App.xaml.cs OnStartup 中：先尝试用令牌缓存静默恢复会话，再决定进登录窗还是主窗 -->
+    <Application.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="Margin" Value="4" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style TargetType="PasswordBox">
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,58 @@
+<Window x:Class="Sample.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Cyaim 桌面示例 - 主界面"
+        Width="640" Height="560"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
+    <DockPanel Margin="16">
+
+        <!-- 顶部：当前用户与角色 -->
+        <Border DockPanel.Dock="Top" Background="#F0F4F8" CornerRadius="6" Padding="12" Margin="0,0,0,12">
+            <StackPanel>
+                <TextBlock x:Name="UserText" Text="正在加载用户信息……" FontSize="15" FontWeight="Bold" />
+                <TextBlock x:Name="RoleText" Text="" Foreground="#555555" Margin="0,4,0,0" />
+            </StackPanel>
+        </Border>
+
+        <!-- 底部：日志 + 注销 -->
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+            <Button x:Name="LogoutButton" DockPanel.Dock="Right" Content="注 销"
+                    VerticalAlignment="Bottom" MinWidth="100" Click="LogoutButton_Click" />
+            <GroupBox Header="日志">
+                <ListBox x:Name="LogList" Height="140"
+                         ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+            </GroupBox>
+        </DockPanel>
+
+        <!-- 中部：权限门控按钮 + 调用 API -->
+        <StackPanel>
+            <GroupBox Header="UI 权限门控（按钮按本地权限集启停）" Padding="8">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="ReadOrderButton" Content="查看订单" MinWidth="120"
+                            Click="ReadOrderButton_Click" />
+                    <Button x:Name="CreateOrderButton" Content="创建订单" MinWidth="120"
+                            Click="CreateOrderButton_Click" />
+                    <Button x:Name="DeleteOrderButton" Content="删除订单" MinWidth="120"
+                            Click="DeleteOrderButton_Click" />
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="调用资源 API（CyaimAuthHttpMessageHandler 自动附 Bearer + 401 刷新重试）"
+                      Padding="8" Margin="0,12,0,0">
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock Text="API 地址" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <Button x:Name="CallApiButton" DockPanel.Dock="Right" Content="GET /api/orders"
+                                MinWidth="140" Click="CallApiButton_Click" />
+                        <TextBox x:Name="ApiBaseBox" Text="http://127.0.0.1:5298" Margin="0,0,8,0"
+                                 ToolTip="Sample.WebApi 地址" />
+                    </DockPanel>
+                    <TextBox x:Name="ApiResultBox" Margin="0,8,0,0" Height="72" IsReadOnly="True"
+                             TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                             Text="（尚未调用）" />
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </DockPanel>
+</Window>

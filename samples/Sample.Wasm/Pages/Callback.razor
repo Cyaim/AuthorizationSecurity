@@ -1,0 +1,63 @@
+@page "/callback"
+@inject CyaimAuthClient Auth
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<PageTitle>登录回调</PageTitle>
+
+@if (_error == null)
+{
+    <p>正在完成登录，请稍候…</p>
+}
+else
+{
+    <p style="color: red;">登录失败：@_error</p>
+    <a href="/">返回首页</a>
+}
+
+@code {
+    private string? _error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // 从回调 URL 读取 code / state
+            var query = System.Web.HttpUtility.ParseQueryString(new Uri(Nav.Uri).Query);
+            string? code = query["code"];
+            string? state = query["state"];
+            if (string.IsNullOrEmpty(code))
+            {
+                _error = query["error_description"] ?? query["error"] ?? "回调缺少 code 参数";
+                return;
+            }
+
+            // 取回登录前保存的 code_verifier，并校验 state 防 CSRF
+            string? verifier = await JS.InvokeAsync<string?>("sessionStorage.getItem", "pkce_verifier");
+            string? expectedState = await JS.InvokeAsync<string?>("sessionStorage.getItem", "pkce_state");
+            if (string.IsNullOrEmpty(verifier))
+            {
+                _error = "未找到 code_verifier（请从首页重新发起登录）";
+                return;
+            }
+            if (!string.Equals(state, expectedState, StringComparison.Ordinal))
+            {
+                _error = "state 不匹配，已阻止本次登录";
+                return;
+            }
+
+            string origin = new Uri(Nav.BaseUri).GetLeftPart(UriPartial.Authority);
+            await Auth.ExchangeAuthorizationCodeAsync(code, origin + "/callback", verifier);
+            await Auth.LoadPermissionsAsync();
+
+            await JS.InvokeVoidAsync("sessionStorage.removeItem", "pkce_verifier");
+            await JS.InvokeVoidAsync("sessionStorage.removeItem", "pkce_state");
+
+            Nav.NavigateTo("/");
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+    }
+}
