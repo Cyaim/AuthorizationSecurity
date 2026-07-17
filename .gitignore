@@ -1,20 +1,36 @@
-﻿################################################################################
-# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
-################################################################################
+# Build results
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+artifacts/
 
+# IDE
+.vs/
+.vscode/
+.idea/
 *.user
-/.vs
-/Cyaim.Authentication/obj
-/Cyaim.Authentication/bin
-/Cyaim.Authentication/.vs
-/Cyaim.Authentication/Properties/PublishProfiles
+*.suo
 
-/Cyaim.Authentication.MigrateCLI/.vs
-/Cyaim.Authentication.MigrateCLI/bin
-/Cyaim.Authentication.MigrateCLI/obj
-/Cyaim.Authentication.MigrateCLI/Properties
+# Test / benchmark output
+TestResults/
+BenchmarkDotNet.Artifacts/
+*.received.*
 
-/Cyaim.Authentication.OpenApi/.vs
-/Cyaim.Authentication.OpenApi/bin
-/Cyaim.Authentication.OpenApi/obj
-/Cyaim.Authentication.OpenApi/Properties
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Local runtime state (dev keys, file stores)
+*.local.json
+dev-keys/
+
+# Sample runtime state
+samples/**/data/
+samples/**/logs/
+cyaim-*-signing-key.json
+cyaim-sso-key.bin
