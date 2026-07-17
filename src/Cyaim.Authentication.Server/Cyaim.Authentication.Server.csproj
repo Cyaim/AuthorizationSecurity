@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <Description>Standalone authorization server for Cyaim.Authentication: OAuth 2.0 / OIDC-compatible endpoints (token, authorize + PKCE, introspect, revoke, userinfo, discovery, JWKS), SSO login session, client registry, embedded admin panel.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cyaim.Authentication.Abstractions\Cyaim.Authentication.Abstractions.csproj" />
+    <ProjectReference Include="..\Cyaim.Authentication.Core\Cyaim.Authentication.Core.csproj" />
+    <ProjectReference Include="..\Cyaim.Authentication\Cyaim.Authentication.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="EmbeddedUI\**\*" />
+  </ItemGroup>
+
+</Project>
