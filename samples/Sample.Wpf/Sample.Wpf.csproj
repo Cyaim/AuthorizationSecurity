@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.Client\Cyaim.Authentication.Client.csproj" />
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.Abstractions\Cyaim.Authentication.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- 令牌缓存文件的 DPAPI 加密（Windows 当前用户范围） -->
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.4" />
+  </ItemGroup>
+
+</Project>

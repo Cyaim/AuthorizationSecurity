@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Cyaim.Authentication\Cyaim.Authentication.csproj" />
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.Abstractions\Cyaim.Authentication.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.Core\Cyaim.Authentication.Core.csproj" />
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.Server\Cyaim.Authentication.Server.csproj" />
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.AdminPanel\Cyaim.Authentication.AdminPanel.csproj" />
+  </ItemGroup>
+
+</Project>
