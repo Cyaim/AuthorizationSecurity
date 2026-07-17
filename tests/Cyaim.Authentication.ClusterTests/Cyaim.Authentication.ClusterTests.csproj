@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.Abstractions\Cyaim.Authentication.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.Core\Cyaim.Authentication.Core.csproj" />
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.EntityFrameworkCore\Cyaim.Authentication.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+
+</Project>
