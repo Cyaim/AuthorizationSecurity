@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.Abstractions\Cyaim.Authentication.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.Core\Cyaim.Authentication.Core.csproj" />
+    <ProjectReference Include="..\..\src\Cyaim.Authentication\Cyaim.Authentication.csproj" />
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.Server\Cyaim.Authentication.Server.csproj" />
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.AdminPanel\Cyaim.Authentication.AdminPanel.csproj" />
+    <ProjectReference Include="..\..\src\Cyaim.Authentication.Client\Cyaim.Authentication.Client.csproj" />
+  </ItemGroup>
+
+</Project>
