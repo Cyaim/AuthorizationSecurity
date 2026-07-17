@@ -1,3 +1,4 @@
+#nullable disable
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
@@ -5,9 +6,9 @@ using System.Text;
 namespace Cyaim.Authentication.Infrastructure
 {
     /// <summary>
-    /// Auth元数据标记
+    /// 鉴权上下文
     /// </summary>
-    public interface IAuthMetadata
+    public interface IAuthContext
     {
     }
 }

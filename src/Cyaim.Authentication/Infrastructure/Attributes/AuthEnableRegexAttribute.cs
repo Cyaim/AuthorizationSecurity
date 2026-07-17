@@ -1,3 +1,4 @@
+#nullable disable
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,7 @@ namespace Cyaim.Authentication.Infrastructure.Attributes
     /// <summary>
     /// 标志启用正则匹配，该特性只能标记在控制器层
     /// </summary>
+    [Obsolete("1.x 遗留 API。请改用 Cyaim.Authentication.Abstractions.RequirePermissionAttribute 的通配符权限代码（如 sys.user.*）。")]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class AuthEnableRegexAttribute : Attribute, IAuthEndPointAttribute
     {

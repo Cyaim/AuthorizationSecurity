@@ -1,3 +1,4 @@
+#nullable disable
 ﻿using Cyaim.Authentication.Infrastructure;
 using Cyaim.Authentication.Infrastructure.Attributes;
 using Microsoft.AspNetCore.Builder;
@@ -20,11 +21,12 @@ namespace Cyaim.Authentication.Middlewares
     public static class AuthMiddlewareExtensions
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="app"></param>
         /// <param name="setupAction"></param>
         /// <returns></returns>
+        [Obsolete("1.x 遗留 API。请改用 app.UseCyaimAuthentication()。")]
         public static IApplicationBuilder UseAuth(this IApplicationBuilder app, Action<AuthOptions> setupAction)
         {
             app.UseMiddleware<AuthMiddleware>();
