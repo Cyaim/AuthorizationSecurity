@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <Description>Client SDK for Cyaim.Authentication: login (password / client credentials / authorization code + PKCE), automatic token refresh, pluggable token stores, local permission checks and UI permission gating. Works in WinForms, WPF, Blazor WebAssembly, console and services.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cyaim.Authentication.Abstractions\Cyaim.Authentication.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="9.0.4" />
+  </ItemGroup>
+
+</Project>
