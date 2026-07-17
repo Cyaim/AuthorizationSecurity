@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyaim.Authentication.Server
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyaim.Authentication.AdminPanel", "src\Cyaim.Authentication.AdminPanel\Cyaim.Authentication.AdminPanel.csproj", "{F6B1148D-FBD0-44F5-BE08-7E82CA218E81}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyaim.Authentication.Client", "src\Cyaim.Authentication.Client\Cyaim.Authentication.Client.csproj", "{6473AF20-A3E1-40B7-B915-87577A3C8E92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,18 @@ Global
 		{F6B1148D-FBD0-44F5-BE08-7E82CA218E81}.Release|x64.Build.0 = Release|Any CPU
 		{F6B1148D-FBD0-44F5-BE08-7E82CA218E81}.Release|x86.ActiveCfg = Release|Any CPU
 		{F6B1148D-FBD0-44F5-BE08-7E82CA218E81}.Release|x86.Build.0 = Release|Any CPU
+		{6473AF20-A3E1-40B7-B915-87577A3C8E92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6473AF20-A3E1-40B7-B915-87577A3C8E92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6473AF20-A3E1-40B7-B915-87577A3C8E92}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6473AF20-A3E1-40B7-B915-87577A3C8E92}.Debug|x64.Build.0 = Debug|Any CPU
+		{6473AF20-A3E1-40B7-B915-87577A3C8E92}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6473AF20-A3E1-40B7-B915-87577A3C8E92}.Debug|x86.Build.0 = Debug|Any CPU
+		{6473AF20-A3E1-40B7-B915-87577A3C8E92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6473AF20-A3E1-40B7-B915-87577A3C8E92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6473AF20-A3E1-40B7-B915-87577A3C8E92}.Release|x64.ActiveCfg = Release|Any CPU
+		{6473AF20-A3E1-40B7-B915-87577A3C8E92}.Release|x64.Build.0 = Release|Any CPU
+		{6473AF20-A3E1-40B7-B915-87577A3C8E92}.Release|x86.ActiveCfg = Release|Any CPU
+		{6473AF20-A3E1-40B7-B915-87577A3C8E92}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,5 +109,6 @@ Global
 		{DC4AD62F-4FA7-4312-B4D4-B6F700CC4E88} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{5C678F8A-323A-40C3-93D7-684FDC67A57A} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{F6B1148D-FBD0-44F5-BE08-7E82CA218E81} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{6473AF20-A3E1-40B7-B915-87577A3C8E92} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 EndGlobal
